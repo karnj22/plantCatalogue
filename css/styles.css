@@ -52,7 +52,7 @@ html, body {
 }
 
 /* ==========================================================================
-   Floating Top-Right Search Bar (No Name Header)
+   Subtle Floating Top-Right Search (Zero Headers)
    ========================================================================== */
 .top-search-bar {
   position: fixed;
@@ -65,67 +65,68 @@ html, body {
 
 .search-box-wrapper {
   position: relative;
-  width: 280px;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  width: 200px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (min-width: 640px) {
   .search-box-wrapper {
-    width: 340px;
+    width: 220px;
   }
 }
 
 .search-box-wrapper:focus-within {
-  width: 320px;
+  width: 280px;
 }
 
 @media (min-width: 640px) {
   .search-box-wrapper:focus-within {
-    width: 400px;
+    width: 300px;
   }
 }
 
 .search-input {
   width: 100%;
-  padding: 0.85rem 2.85rem 0.85rem 2.85rem;
-  background: rgba(253, 248, 240, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  padding: 0.55rem 2.2rem 0.55rem 2.2rem;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-pod);
   font-family: inherit;
-  font-size: 0.88rem;
-  color: var(--text-main);
-  box-shadow: 0 8px 24px -4px rgba(90, 60, 15, 0.15), 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-size: 0.82rem;
+  color: #3d3224;
   outline: none;
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(60, 40, 10, 0.06);
+  transition: all 0.25s ease;
 }
 
 .search-input::placeholder {
-  color: #9c8e7e;
-  font-size: 0.84rem;
+  color: rgba(90, 70, 45, 0.6);
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .search-input:focus {
-  background: #ffffff;
-  border-color: #c99f5e;
-  box-shadow: 0 10px 30px -4px rgba(90, 60, 15, 0.22), 0 0 0 3px rgba(217, 119, 6, 0.18);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(217, 119, 6, 0.4);
+  box-shadow: 0 6px 18px rgba(60, 40, 10, 0.12);
 }
 
 .search-icon {
   position: absolute;
-  left: 1.05rem;
+  left: 0.8rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 17px;
-  height: 17px;
-  color: #8c7b69;
+  width: 14px;
+  height: 14px;
+  color: rgba(90, 70, 45, 0.65);
   pointer-events: none;
 }
 
 .search-clear-btn {
   position: absolute;
-  right: 0.85rem;
+  right: 0.65rem;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(140, 123, 105, 0.2);
