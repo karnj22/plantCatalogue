@@ -786,20 +786,30 @@ PROFILE 25: GARDEN COSMOS & CANOPY LANDSCAPE (Cosmos bipinnatus & Beaucarnea)
 
 4. USER INTERACTION DESIGN & CONTROLS
 --------------------------------------------------------------------------------
-- Live Reactive Search: As the user types into the search box, the catalog instantly
-  filters across common names, scientific binomials, families, categories, foliage colors,
-  sunlight requirements, and soil mixes.
-- Category Filter Chips: Quick toggles for All Specimens, Indoor/Patio, Outdoor/Landscape,
-  Flowering Varieties, and Colorful Foliage.
-- Multi-Photo Carousels: Entries with multiple field photos feature interactive prev/next
-  arrow controls and live photo counters (e.g., "1 / 10 photos").
-- Expandable Cultivation Accordion: Each card features a "Full Growing & Soil Guide" button
-  that cleanly toggles the extended parameters (Climate, Soil Mix, Nutrition, Wind, Pro Tips).
-- Fullscreen Lightbox Modal: Clicking any photo enlarges it into a fullscreen darkened
-  lightbox with image details and caption.
-- Keyboard Navigation:
-  * Press 'Escape' to close the photo lightbox modal.
-  * Tab navigation support for all interactive buttons.
+- Dual Phone Mockup Layout (Desktop): Plants are presented as sleek smartphone device
+  screens positioned two side-by-side on a warm, earthy ochre canvas. Users scroll
+  down to browse consecutive pairs of specimens.
+- Headerless Interface: To maximize aesthetic immersion, the traditional text header
+  has been removed entirely in favor of an app-style experience.
+- Floating Top-Right Search: An unobtrusive pill-shaped search input is pinned to the
+  top-right of the viewport. Users can search by plant name, scientific binomial, foliage
+  color (e.g. pink, scarlet, silver), sunlight level, soil mix, or climate (e.g. "warm weather").
+- Visual Summaries (Condensed View): Each phone card features 4 circular metric pods:
+  * 💧 Water: Quick watering requirement (e.g., "Moderate", "Even Moist", "Low / Dry").
+  * ☀️ Sunlight: Light requirement (e.g., "Bright Indirect", "Part Shade", "Full Sun").
+  * 🌡️ Weather: Climate & environment (e.g., "18°C-30°C", "Indoor", "Tropical").
+  * 🌱 Soil: Potting substrate summary (e.g., "Aroid Mix", "Coco Peat", "Loam").
+- Expandable Documentation Drawer: Tapping the sheet handle or "View Full Care Guide"
+  slides up the full horticultural dossier containing all 10 care parameters without
+  navigating away from the card.
+- Multi-Photo Carousels & Swipe Gestures:
+  * Desktop: Click the arrow controls or click anywhere on the image to cycle through photos.
+  * Mobile: Horizontal touch swipe gestures cycle through photos of the current plant.
+  * Live photo count indicator (e.g. "1 / 10").
+- Mobile Viewport (Swipe-Up Snap, No Scroll):
+  * On mobile devices, the catalog displays one full-screen plant card at a time (100dvh).
+  * Smooth vertical CSS scroll-snap allows the user to swipe up to snap directly to
+    the next plant card with zero erratic scrolling.
 
 
 5. EXECUTION, TESTING & GITHUB REPOSITORY DEPLOYMENT

@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karn's Plant Catalogue & Botanical Archive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Plant Catalogue &amp; Care Assistant</title>
   
-  <!-- SEO & Social Meta Tags -->
-  <meta name="description" content="Botanical reference and field identification catalogue featuring 43 verified specimen photos, complete horticultural care profiles, foliage colors, sun exposure, watering cycles, soil formulas, and wind tolerance.">
-  <meta name="author" content="Karn">
-
   <!-- Typography: Google Fonts Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,84 +15,37 @@
 </head>
 <body>
 
-  <!-- Sticky Glassmorphic Header -->
-  <header class="site-header">
-    <div class="header-container">
-      <div class="brand-wrapper">
-        <span class="brand-icon" aria-hidden="true">🌿</span>
-        <div>
-          <h1 class="brand-title">Karn's Plant Catalogue</h1>
-          <p class="brand-subtitle">Field Botanical Archive & Comprehensive Horticultural Guide</p>
-        </div>
-      </div>
-
-      <!-- Real-Time Search Bar -->
-      <div class="search-box">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input 
-          type="text" 
-          id="searchInput" 
-          class="search-input" 
-          placeholder="Search species, foliage, light, soil..." 
-          aria-label="Search plant specimens"
-        >
-      </div>
+  <!-- Floating Top-Right Search Bar (No Name Header on the Page) -->
+  <aside class="top-search-bar" role="search" aria-label="Search Plant Specimens">
+    <div class="search-box-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input 
+        type="search" 
+        id="searchInput" 
+        class="search-input" 
+        placeholder="Search color, warm weather, name..." 
+        aria-label="Search by plant name, foliage color, or weather"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button id="searchClearBtn" class="search-clear-btn" aria-label="Clear search input">&times;</button>
     </div>
-  </header>
+  </aside>
 
-  <!-- Category & Environment Filters -->
-  <nav class="filter-bar" aria-label="Plant Categories">
-    <div class="filter-container">
-      <button class="filter-chip active" data-filter="all">All Specimens</button>
-      <button class="filter-chip" data-filter="indoor">🏡 Indoor / Patio</button>
-      <button class="filter-chip" data-filter="outdoor">☀️ Outdoor / Landscape</button>
-      <button class="filter-chip" data-filter="flowering">🌸 Flowering Varieties</button>
-      <button class="filter-chip" data-filter="foliage">🍃 Colorful Foliage</button>
-    </div>
-  </nav>
-
-  <!-- Live Statistics Ribbon -->
-  <section class="stats-ribbon" aria-label="Catalog Overview">
-    <span>Catalogued Specimens: <span id="displayedCount" class="stats-count">24</span></span>
-    <span>Field Photography Archive &bull; 43 Verified Specimens</span>
-  </section>
-
-  <!-- Main Grid Area -->
-  <main class="main-content">
-    <div id="plantGrid" class="plants-grid">
-      <!-- Dynamic plant cards populated by js/app.js -->
+  <!-- Main Viewport: Two Side-By-Side Screens on Desktop, Single Swipe-Up Snap on Mobile -->
+  <main class="catalog-viewport" id="catalogViewport">
+    <div id="phonesGrid" class="phones-grid">
+      <!-- Dynamic Phone Screens injected by js/app.js -->
     </div>
 
     <!-- Empty Search State -->
-    <div id="emptyState" class="empty-state" style="display: none;">
-      <h3>No Botanical Match Found</h3>
-      <p>Try searching by different botanical names, care parameters, foliage colors, or reset your filter chips.</p>
+    <div id="noResultsView" class="no-results-view" style="display: none;">
+      <h2>No Specimens Found</h2>
+      <p>Try searching for a different plant name, foliage color (e.g. pink, red, silver), sunlight, or "warm weather".</p>
     </div>
   </main>
-
-  <!-- Fullscreen Lightbox Modal -->
-  <div id="modalOverlay" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-container">
-      <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close photo preview">&times;</button>
-      <div class="modal-image-wrapper">
-        <img id="modalImage" class="modal-image" src="" alt="Specimen High-Resolution Preview">
-      </div>
-      <div class="modal-footer">
-        <div id="modalTitle" class="modal-plant-title"></div>
-        <div id="modalCaption" class="modal-plant-caption"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>&copy; 2026 Karn's Plant Catalogue &bull; Field Reference &amp; Horticultural Repository</p>
-      <p class="footer-sub">All 43 photographs captured on-site and verified against definitive botanical taxonomy.</p>
-    </div>
-  </footer>
 
   <!-- Modular Scripts (Data Model & App Logic) -->
   <script src="js/data.js"></script>

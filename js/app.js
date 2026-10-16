@@ -1,178 +1,272 @@
 /**
- * Karn's Plant Catalogue - Interactive Application Logic
- * Modular separation of concerns: Handles catalog rendering, reactive filtering,
- * photo carousels, expandable horticultural detail drawers, and fullscreen lightbox modal.
+ * Plant Catalogue - Dual Screen Application Controller
+ * Handles real-time search, multi-image carousel with swipe gestures,
+ * and expanding/condensing horticultural care documentation.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Application State
   const state = {
     plants: plantCatalogData || [],
     filteredPlants: [...plantCatalogData],
-    activeFilter: 'all',
     searchQuery: '',
-    currentCarouselIndexes: {},
-    modalState: {
-      isOpen: false,
-      plantId: null,
-      photoIndex: 0
-    }
+    photoIndices: {},
+    expandedCards: new Set()
   };
 
-  // DOM Elements
-  const plantGrid = document.getElementById('plantGrid');
-  const searchInput = document.getElementById('searchInput');
-  const filterChips = document.querySelectorAll('.filter-chip');
-  const displayedCountEl = document.getElementById('displayedCount');
-  const emptyState = document.getElementById('emptyState');
-  
-  // Modal Elements
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalImage = document.getElementById('modalImage');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalCaption = document.getElementById('modalCaption');
-  const modalCloseBtn = document.getElementById('modalCloseBtn');
-
-  // Initialize carousel index trackers
+  // Initialize photo index tracking for all plants
   state.plants.forEach(plant => {
-    state.currentCarouselIndexes[plant.id] = 0;
+    state.photoIndices[plant.id] = 0;
   });
 
+  // DOM Elements
+  const phonesGrid = document.getElementById('phonesGrid');
+  const searchInput = document.getElementById('searchInput');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  const noResultsView = document.getElementById('noResultsView');
+
   /**
-   * Render all plant cards based on active filtered list
+   * Helper to compute short, punchy visual summary tags from detailed text
+   */
+  function extractVisualSummaries(plant) {
+    // Water metric
+    let waterSummary = "Moderate";
+    const wLow = plant.wateringCycle.toLowerCase();
+    if (wLow.includes("very low") || wLow.includes("dry out 100%")) {
+      waterSummary = "Low / Dry";
+    } else if (wLow.includes("high moisture") || wLow.includes("evenly moist")) {
+      waterSummary = "Even Moist";
+    } else if (wLow.includes("top 1-2") || wLow.includes("top inch")) {
+      waterSummary = "Moderate";
+    }
+
+    // Light metric
+    let lightSummary = "Indirect";
+    const lLow = plant.sunExposure.toLowerCase();
+    if (lLow.includes("full sun") || lLow.includes("direct")) {
+      lightSummary = "Full / Direct";
+    } else if (lLow.includes("low to")) {
+      lightSummary = "Low / Indirect";
+    } else if (lLow.includes("bright indirect") || lLow.includes("filtered")) {
+      lightSummary = "Bright Indirect";
+    } else if (lLow.includes("partial")) {
+      lightSummary = "Part Shade";
+    }
+
+    // Climate / Weather metric
+    let weatherSummary = "Warm";
+    const envLow = plant.environment.toLowerCase();
+    const wthLow = plant.suitableWeather.toLowerCase();
+    if (envLow.includes("indoor") && !envLow.includes("outdoor")) {
+      weatherSummary = "Indoor";
+    } else if (envLow.includes("outdoor")) {
+      weatherSummary = "Outdoor";
+    } else if (wthLow.includes("tropical")) {
+      weatherSummary = "Tropical";
+    } else {
+      weatherSummary = "18°C-30°C";
+    }
+
+    // Soil metric
+    let soilSummary = "Aroid Mix";
+    const sLow = plant.soilRequirements.toLowerCase();
+    if (sLow.includes("succulent") || sLow.includes("cactus")) {
+      soilSummary = "Porous / Sand";
+    } else if (sLow.includes("aroid") || sLow.includes("coco chips")) {
+      soilSummary = "Chunky Aroid";
+    } else if (sLow.includes("coco peat")) {
+      soilSummary = "Coco Peat";
+    } else if (sLow.includes("loam") || sLow.includes("garden soil")) {
+      soilSummary = "Rich Loam";
+    }
+
+    return { waterSummary, lightSummary, weatherSummary, soilSummary };
+  }
+
+  /**
+   * Render all plant cards
    */
   function renderPlants() {
-    if (!plantGrid) return;
-    plantGrid.innerHTML = '';
+    if (!phonesGrid) return;
+    phonesGrid.innerHTML = '';
 
     if (state.filteredPlants.length === 0) {
-      if (emptyState) emptyState.style.display = 'block';
-      if (displayedCountEl) displayedCountEl.textContent = '0';
+      if (noResultsView) noResultsView.style.display = 'block';
       return;
     }
 
-    if (emptyState) emptyState.style.display = 'none';
-    if (displayedCountEl) displayedCountEl.textContent = state.filteredPlants.length.toString();
+    if (noResultsView) noResultsView.style.display = 'none';
 
     state.filteredPlants.forEach(plant => {
-      const card = createPlantCard(plant);
-      plantGrid.appendChild(card);
+      const card = createPhoneCard(plant);
+      phonesGrid.appendChild(card);
     });
   }
 
   /**
-   * Generate DOM element for an individual plant specimen card
+   * Create an individual Phone Mockup card
    */
-  function createPlantCard(plant) {
-    const card = document.createElement('article');
-    card.className = 'plant-card';
-    card.id = `card-${plant.id}`;
+  function createPhoneCard(plant) {
+    const card = document.createElement('div');
+    const isExpanded = state.expandedCards.has(plant.id);
+    card.className = `phone-card ${isExpanded ? 'expanded' : ''}`;
+    card.id = `plant-card-${plant.id}`;
+    card.setAttribute('data-plant-id', plant.id);
 
-    const currentIndex = state.currentCarouselIndexes[plant.id] || 0;
-    const currentPhoto = plant.images[currentIndex] || plant.images[0];
-    const hasMultiplePhotos = plant.images.length > 1;
+    const activeIndex = state.photoIndices[plant.id] || 0;
+    const currentPhoto = plant.images[activeIndex] || plant.images[0];
+    const totalPhotos = plant.images.length;
+    const hasMultiple = totalPhotos > 1;
 
-    // Card Media HTML
-    const mediaHTML = `
-      <div class="card-media" data-plant-id="${plant.id}" title="Click to view full photo">
-        <span class="category-tag">${escapeHTML(plant.category)}</span>
-        <img src="${escapeHTML(currentPhoto.file)}" alt="${escapeHTML(plant.name)}" class="card-image" id="img-${plant.id}">
-        
-        ${hasMultiplePhotos ? `
-          <button class="carousel-nav-btn carousel-prev" data-action="prev" data-plant-id="${plant.id}" title="Previous photo" aria-label="Previous photo">
-            &#10094;
-          </button>
-          <button class="carousel-nav-btn carousel-next" data-action="next" data-plant-id="${plant.id}" title="Next photo" aria-label="Next photo">
-            &#10095;
-          </button>
-          <span class="carousel-counter" id="counter-${plant.id}">
-            ${currentIndex + 1} / ${plant.images.length} photos
-          </span>
-        ` : ''}
-      </div>
-    `;
-
-    // Badges HTML
-    const badgesHTML = `
-      <div class="badge-strip">
-        <span class="quick-badge badge-indoor">🏡 ${escapeHTML(plant.environment)}</span>
-        <span class="quick-badge badge-sun">☀️ ${escapeHTML(plant.sunExposure.split(';')[0])}</span>
-        <span class="quick-badge badge-water">💧 ${escapeHTML(plant.wateringCycle.split(':')[0])}</span>
-      </div>
-    `;
-
-    // Core Care Breakdown HTML
-    const careHTML = `
-      <div class="care-section">
-        <div class="care-item">
-          <span class="care-label">🍃 Foliage</span>
-          <span class="care-value">${escapeHTML(plant.foliageColor)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">🌸 Flowers</span>
-          <span class="care-value">${escapeHTML(plant.flowerInfo)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">💧 Watering</span>
-          <span class="care-value">${escapeHTML(plant.wateringCycle)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">☀️ Sunlight</span>
-          <span class="care-value">${escapeHTML(plant.sunExposure)}</span>
-        </div>
-      </div>
-    `;
-
-    // Extended Care (Accordion Drawer) HTML
-    const extendedCareHTML = `
-      <button type="button" class="extended-care-toggle" data-toggle-target="drawer-${plant.id}">
-        <span>🌿 Full Growing & Soil Guide</span>
-        <span class="toggle-icon">&#9662;</span>
-      </button>
-
-      <div class="extended-care-details" id="drawer-${plant.id}">
-        <div class="care-item">
-          <span class="care-label">🌡️ Climate</span>
-          <span class="care-value">${escapeHTML(plant.suitableWeather)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">🌱 Soil Mix</span>
-          <span class="care-value">${escapeHTML(plant.soilRequirements)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">🧪 Nutrition</span>
-          <span class="care-value">${escapeHTML(plant.nutritionalRequirements)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">💨 Wind</span>
-          <span class="care-value">${escapeHTML(plant.windConditions)}</span>
-        </div>
-        <div class="care-item">
-          <span class="care-label">💡 Pro Tips</span>
-          <span class="care-value">${escapeHTML(plant.cultivationTips)}</span>
-        </div>
-      </div>
-    `;
+    const { waterSummary, lightSummary, weatherSummary, soilSummary } = extractVisualSummaries(plant);
 
     card.innerHTML = `
-      ${mediaHTML}
-      <div class="card-content">
-        <div class="plant-header">
-          <h2 class="plant-title">${escapeHTML(plant.name)}</h2>
-          <p class="plant-scientific">${escapeHTML(plant.scientificName)}</p>
-          <p class="plant-family">${escapeHTML(plant.family)}</p>
+      <!-- Phone Top Status Bar -->
+      <div class="phone-status-bar">
+        <span>3:41</span>
+        <div class="status-speaker-notch"></div>
+        <div class="status-icons">
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor">
+            <path d="M1 9.5H3V11H1V9.5ZM4.5 7H6.5V11H4.5V7ZM8 4.5H10V11H8V4.5ZM11.5 1.5H13.5V11H11.5V1.5Z"/>
+          </svg>
+          <svg width="14" height="11" viewBox="0 0 14 11" fill="currentColor">
+            <path d="M7 2C9.4 2 11.5 3 13 4.6L7 11 1 4.6C2.5 3 4.6 2 7 2ZM7 0C3.9 0 1.2 1.3 0 3.3L7 11 14 3.3C12.8 1.3 10.1 0 7 0Z"/>
+          </svg>
+          <svg width="18" height="9" viewBox="0 0 18 9" fill="currentColor">
+            <rect x="0.5" y="0.5" width="14" height="8" rx="2" stroke="currentColor" fill="none"/>
+            <rect x="2" y="2" width="10" height="5" rx="1" fill="currentColor"/>
+            <path d="M16 3V6" stroke="currentColor" stroke-linecap="round"/>
+          </svg>
         </div>
-        ${badgesHTML}
-        ${careHTML}
-        ${extendedCareHTML}
+      </div>
+
+      <!-- Upper Picture Gallery -->
+      <div class="phone-media-gallery" id="gallery-${plant.id}">
+        <span class="category-badge-chip">${escapeHTML(plant.category)}</span>
+        
+        <div class="gallery-image-wrapper" title="Click or swipe to cycle through photos">
+          <img 
+            id="img-${plant.id}" 
+            src="${escapeHTML(currentPhoto.file)}" 
+            alt="${escapeHTML(plant.name)}" 
+            class="gallery-img"
+          >
+        </div>
+
+        ${hasMultiple ? `
+          <button class="gallery-nav-btn gallery-prev" data-action="prev" data-plant-id="${plant.id}" aria-label="Previous image">&#10094;</button>
+          <button class="gallery-nav-btn gallery-next" data-action="next" data-plant-id="${plant.id}" aria-label="Next image">&#10095;</button>
+          <div class="gallery-counter-pill" id="counter-${plant.id}">
+            ${activeIndex + 1} / ${totalPhotos}
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Bottom Sheet -->
+      <div class="phone-bottom-sheet" id="sheet-${plant.id}">
+        <div class="sheet-handle-row" data-action="toggle-expand" data-plant-id="${plant.id}" title="Tap to expand / collapse full documentation">
+          <div class="sheet-handle-pill"></div>
+        </div>
+
+        <div class="plant-title-wrap">
+          <h2 class="plant-name">${escapeHTML(plant.name)}</h2>
+        </div>
+        <p class="plant-binomial">${escapeHTML(plant.scientificName)} &bull; ${escapeHTML(plant.family.split(' ')[0])}</p>
+
+        <!-- Visual Summaries Pods (4 Circular Metrics) -->
+        <div class="visual-pods-grid">
+          <div class="visual-pod" data-action="toggle-expand" data-plant-id="${plant.id}" title="Watering summary: ${escapeHTML(plant.wateringCycle)}">
+            <div class="pod-icon-circle">💧</div>
+            <span class="pod-category">Water</span>
+            <span class="pod-value">${escapeHTML(waterSummary)}</span>
+          </div>
+
+          <div class="visual-pod" data-action="toggle-expand" data-plant-id="${plant.id}" title="Sunlight summary: ${escapeHTML(plant.sunExposure)}">
+            <div class="pod-icon-circle">☀️</div>
+            <span class="pod-category">Sunlight</span>
+            <span class="pod-value">${escapeHTML(lightSummary)}</span>
+          </div>
+
+          <div class="visual-pod" data-action="toggle-expand" data-plant-id="${plant.id}" title="Climate summary: ${escapeHTML(plant.suitableWeather)}">
+            <div class="pod-icon-circle">🌡️</div>
+            <span class="pod-category">Weather</span>
+            <span class="pod-value">${escapeHTML(weatherSummary)}</span>
+          </div>
+
+          <div class="visual-pod" data-action="toggle-expand" data-plant-id="${plant.id}" title="Soil summary: ${escapeHTML(plant.soilRequirements)}">
+            <div class="pod-icon-circle">🌱</div>
+            <span class="pod-category">Soil</span>
+            <span class="pod-value">${escapeHTML(soilSummary)}</span>
+          </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <button type="button" class="expand-toggle-bar" data-action="toggle-expand" data-plant-id="${plant.id}">
+          <span class="toggle-text">${isExpanded ? 'Hide Documentation' : 'View Full Care Guide'}</span>
+          <span class="toggle-arrow">&#9662;</span>
+        </button>
+
+        <!-- Extended Horticultural Documentation (Expanded View) -->
+        <div class="extended-doc-panel">
+          <div class="doc-section-card">
+            <div class="doc-section-title">🍃 Foliage Colour &amp; Texture</div>
+            <div class="doc-section-text">${escapeHTML(plant.foliageColor)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">🌸 Flower Characteristics</div>
+            <div class="doc-section-text">${escapeHTML(plant.flowerInfo)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">💧 Watering Cycle &amp; Moisture</div>
+            <div class="doc-section-text">${escapeHTML(plant.wateringCycle)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">☀️ Optimal Sun Exposure</div>
+            <div class="doc-section-text">${escapeHTML(plant.sunExposure)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">🌡️ Suitable Weather &amp; Environment</div>
+            <div class="doc-section-text">${escapeHTML(plant.suitableWeather)} &bull; ${escapeHTML(plant.environment)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">🧪 Nutritional Requirements</div>
+            <div class="doc-section-text">${escapeHTML(plant.nutritionalRequirements)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">🌱 Soil Substrates &amp; Requirements</div>
+            <div class="doc-section-text">${escapeHTML(plant.soilRequirements)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">💨 Wind Conditions &amp; Tolerance</div>
+            <div class="doc-section-text">${escapeHTML(plant.windConditions)}</div>
+          </div>
+
+          <div class="doc-section-card">
+            <div class="doc-section-title">💡 Pro Cultivation &amp; Propagation Tips</div>
+            <div class="doc-section-text">${escapeHTML(plant.cultivationTips)}</div>
+          </div>
+
+          <div class="doc-photo-caption" id="caption-${plant.id}">
+            📷 <strong>Photo Note:</strong> ${escapeHTML(currentPhoto.caption)}
+          </div>
+        </div>
       </div>
     `;
+
+    // Attach horizontal touch swipe for the image gallery
+    setupGallerySwipe(card.querySelector('.phone-media-gallery'), plant.id);
 
     return card;
   }
 
   /**
-   * Escape HTML to guard against XSS
+   * Escape HTML utility
    */
   function escapeHTML(str) {
     if (!str) return '';
@@ -185,162 +279,172 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Filter and search handler
+   * Switch photo in carousel
    */
-  function applyFilters() {
-    const query = state.searchQuery.toLowerCase().trim();
-    const filter = state.activeFilter;
+  function stepPhoto(plantId, step) {
+    const plant = state.plants.find(p => p.id === plantId);
+    if (!plant || plant.images.length <= 1) return;
 
-    state.filteredPlants = state.plants.filter(plant => {
-      // Category match
-      let matchesFilter = true;
-      if (filter === 'indoor') {
-        matchesFilter = plant.environment.toLowerCase().includes('indoor');
-      } else if (filter === 'outdoor') {
-        matchesFilter = plant.environment.toLowerCase().includes('outdoor') || plant.category.toLowerCase().includes('landscape');
-      } else if (filter === 'flowering') {
-        matchesFilter = plant.category.toLowerCase().includes('flowering');
-      } else if (filter === 'foliage') {
-        matchesFilter = plant.category.toLowerCase().includes('foliage') || plant.category.toLowerCase().includes('aroid');
+    let idx = state.photoIndices[plantId] || 0;
+    idx = (idx + step + plant.images.length) % plant.images.length;
+    state.photoIndices[plantId] = idx;
+
+    const imgEl = document.getElementById(`img-${plantId}`);
+    const counterEl = document.getElementById(`counter-${plantId}`);
+    const captionEl = document.getElementById(`caption-${plantId}`);
+
+    if (imgEl) {
+      imgEl.style.opacity = '0.5';
+      setTimeout(() => {
+        imgEl.src = plant.images[idx].file;
+        imgEl.style.opacity = '1';
+      }, 100);
+    }
+    if (counterEl) {
+      counterEl.textContent = `${idx + 1} / ${plant.images.length}`;
+    }
+    if (captionEl) {
+      captionEl.innerHTML = `📷 <strong>Photo Note:</strong> ${escapeHTML(plant.images[idx].caption)}`;
+    }
+  }
+
+  /**
+   * Setup horizontal touch swipe on plant gallery
+   */
+  function setupGallerySwipe(galleryEl, plantId) {
+    if (!galleryEl) return;
+    let startX = 0;
+    let startY = 0;
+
+    galleryEl.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+    }, { passive: true });
+
+    galleryEl.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+
+      // Check if horizontal swipe was more pronounced than vertical
+      if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+        if (deltaX < 0) {
+          stepPhoto(plantId, 1); // Swipe left -> Next
+        } else {
+          stepPhoto(plantId, -1); // Swipe right -> Prev
+        }
       }
+    }, { passive: true });
+  }
 
-      // Search query match
-      let matchesQuery = true;
-      if (query) {
-        const searchableFields = [
+  /**
+   * Toggle expanded documentation view
+   */
+  function toggleExpandCard(plantId) {
+    const card = document.getElementById(`plant-card-${plantId}`);
+    if (!card) return;
+
+    if (state.expandedCards.has(plantId)) {
+      state.expandedCards.delete(plantId);
+      card.classList.remove('expanded');
+      const text = card.querySelector('.toggle-text');
+      if (text) text.textContent = 'View Full Care Guide';
+    } else {
+      state.expandedCards.add(plantId);
+      card.classList.add('expanded');
+      const text = card.querySelector('.toggle-text');
+      if (text) text.textContent = 'Hide Documentation';
+    }
+  }
+
+  /**
+   * Search filter logic: handles names, foliage color, warm weather, sunlight, soil, etc.
+   */
+  function handleSearch(query) {
+    state.searchQuery = query.toLowerCase().trim();
+
+    if (searchClearBtn) {
+      searchClearBtn.classList.toggle('visible', state.searchQuery.length > 0);
+    }
+
+    if (!state.searchQuery) {
+      state.filteredPlants = [...state.plants];
+    } else {
+      const tokens = state.searchQuery.split(/\s+/).filter(Boolean);
+
+      state.filteredPlants = state.plants.filter(plant => {
+        const searchableContent = [
           plant.name,
           plant.scientificName,
           plant.family,
           plant.category,
+          plant.environment,
           plant.foliageColor,
           plant.flowerInfo,
-          plant.environment,
+          plant.wateringCycle,
           plant.sunExposure,
-          plant.soilRequirements
+          plant.suitableWeather,
+          plant.nutritionalRequirements,
+          plant.soilRequirements,
+          plant.windConditions,
+          plant.cultivationTips
         ].join(' ').toLowerCase();
 
-        matchesQuery = searchableFields.includes(query);
-      }
-
-      return matchesFilter && matchesQuery;
-    });
+        return tokens.every(token => searchableContent.includes(token));
+      });
+    }
 
     renderPlants();
   }
 
-  // Search Input Event
+  // Search input listeners
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
-      state.searchQuery = e.target.value;
-      applyFilters();
+      handleSearch(e.target.value);
     });
   }
 
-  // Filter Chips Events
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      state.activeFilter = chip.getAttribute('data-filter') || 'all';
-      applyFilters();
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      handleSearch('');
+      searchInput.focus();
     });
-  });
+  }
 
-  // Global Click Delegation (Carousel Navigation, Expandable Accordions, Lightbox Modal)
+  // Global Click delegation
   document.addEventListener('click', (e) => {
-    // 1. Carousel Navigation
-    const navBtn = e.target.closest('.carousel-nav-btn');
+    // 1. Gallery navigation buttons
+    const navBtn = e.target.closest('.gallery-nav-btn');
     if (navBtn) {
       e.stopPropagation();
       const plantId = navBtn.getAttribute('data-plant-id');
       const action = navBtn.getAttribute('data-action');
-      const plant = state.plants.find(p => p.id === plantId);
-      if (!plant || plant.images.length <= 1) return;
-
-      let idx = state.currentCarouselIndexes[plantId] || 0;
-      if (action === 'next') {
-        idx = (idx + 1) % plant.images.length;
-      } else if (action === 'prev') {
-        idx = (idx - 1 + plant.images.length) % plant.images.length;
-      }
-      state.currentCarouselIndexes[plantId] = idx;
-
-      // Update image and counter directly without full re-render
-      const imgEl = document.getElementById(`img-${plantId}`);
-      const counterEl = document.getElementById(`counter-${plantId}`);
-      if (imgEl) imgEl.src = plant.images[idx].file;
-      if (counterEl) counterEl.textContent = `${idx + 1} / ${plant.images.length} photos`;
+      stepPhoto(plantId, action === 'next' ? 1 : -1);
       return;
     }
 
-    // 2. Expandable Growing Details Drawer
-    const toggleBtn = e.target.closest('.extended-care-toggle');
-    if (toggleBtn) {
-      const targetId = toggleBtn.getAttribute('data-toggle-target');
-      const drawer = document.getElementById(targetId);
-      const icon = toggleBtn.querySelector('.toggle-icon');
-      if (drawer) {
-        drawer.classList.toggle('open');
-        if (icon) {
-          icon.innerHTML = drawer.classList.contains('open') ? '&#9652;' : '&#9662;';
-        }
+    // 2. Click on image itself -> advances to next photo if multiple
+    const imgWrapper = e.target.closest('.gallery-image-wrapper');
+    if (imgWrapper) {
+      const gallery = imgWrapper.closest('.phone-media-gallery');
+      if (gallery) {
+        const plantId = gallery.id.replace('gallery-', '');
+        stepPhoto(plantId, 1);
       }
       return;
     }
 
-    // 3. Card Media Click -> Open Fullscreen Modal Lightbox
-    const mediaEl = e.target.closest('.card-media');
-    if (mediaEl && !e.target.closest('.carousel-nav-btn')) {
-      const plantId = mediaEl.getAttribute('data-plant-id');
-      const plant = state.plants.find(p => p.id === plantId);
-      if (plant) {
-        const photoIndex = state.currentCarouselIndexes[plantId] || 0;
-        openModal(plant, photoIndex);
-      }
+    // 3. Expand / Collapse Trigger
+    const expandTrigger = e.target.closest('[data-action="toggle-expand"]');
+    if (expandTrigger) {
+      const plantId = expandTrigger.getAttribute('data-plant-id');
+      toggleExpandCard(plantId);
       return;
-    }
-
-    // 4. Close Modal on Backdrop Click
-    if (e.target === modalOverlay) {
-      closeModal();
     }
   });
 
-  // Modal Open / Close Logic
-  function openModal(plant, photoIndex) {
-    if (!modalOverlay || !modalImage || !modalTitle || !modalCaption) return;
-    const photo = plant.images[photoIndex] || plant.images[0];
-    
-    modalImage.src = photo.file;
-    modalImage.alt = plant.name;
-    modalTitle.textContent = `${plant.name} (${plant.scientificName})`;
-    modalCaption.textContent = photo.caption || `${photoIndex + 1} of ${plant.images.length} photos`;
-
-    modalOverlay.classList.add('active');
-    state.modalState.isOpen = true;
-    state.modalState.plantId = plant.id;
-    state.modalState.photoIndex = photoIndex;
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    if (!modalOverlay) return;
-    modalOverlay.classList.remove('active');
-    state.modalState.isOpen = false;
-    document.body.style.overflow = '';
-  }
-
-  if (modalCloseBtn) {
-    modalCloseBtn.addEventListener('click', closeModal);
-  }
-
-  // Keyboard Accessibility
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && state.modalState.isOpen) {
-      closeModal();
-    }
-  });
-
-  // Initial Render
+  // Initial catalog render
   renderPlants();
 });
