@@ -1,0 +1,139 @@
+================================================================================
+                    KARN'S PLANT CATALOGUE & BOTANICAL ARCHIVE
+================================================================================
+
+1. SYSTEM ARCHITECTURE & FILE STRUCTURE
+--------------------------------------------------------------------------------
+The project is a standalone, lightweight, zero-dependency client-side botanical 
+catalogue and field reference application.
+
+Directory Layout:
+plantCatalogue/
+├── index.html                   # Core web application (UI, styles, catalogue data, interactive JS)
+├── images/                      # Field photography archive (43 JPEG specimens)
+│   ├── 20261011_142425.jpg
+│   ├── ...
+│   └── 20261011_150138.jpg
+└── plant_catalogue_documentation.txt  # Companion architecture and specification documentation
+
+Key Technologies:
+- Markup: Semantic HTML5 structure.
+- Styling: Tailwind CSS via CDN with modern responsive card grids and glassmorphic badges.
+- Typography: Google Inter font family.
+- Logic: Vanilla JavaScript ES6+ (reactive search filter, multi-photo carousel controls).
+- Hosting: Fully compatible with GitHub Pages and local filesystem viewing.
+
+2. BOTANICAL IDENTIFICATION ARCHIVE (43 IMAGES / 21 ENTRIES)
+--------------------------------------------------------------------------------
+1. Poinsettia (Euphorbia pulcherrima, Euphorbiaceae)
+   - Images: 20261011_142425.jpg, 20261011_142431.jpg
+   - Notes: Modified colored bracts in scarlet, pink, and ivory surrounding central cyathia.
+
+2. Flamingo Flower / Anthurium (Anthurium andraeanum, Araceae)
+   - Images: 20261011_143203.jpg, 20261011_143359.jpg
+   - Notes: Glossy lacquer-red heart-shaped spathes with erect creamy-yellow spadices.
+
+3. Siam Tulip / Hidden Lily (Curcuma alismatifolia, Zingiberaceae)
+   - Images: 20261011_144023.jpg, 20261011_144040.jpg
+   - Notes: Clumping tropical ginger with vibrant rose-pink and coral-tinted flower bracts.
+
+4. Garden Croton (Codiaeum variegatum, Euphorbiaceae)
+   - Images: 20261011_144445.jpg, 20261011_144454.jpg, 20261011_144502.jpg
+   - Notes: Multicolored thick foliage; cultivars 'Petra' (veined), 'Mammy' (spiral), 'Gold Dust'.
+
+5. China Doll / Serpent Tree (Radermachera sinica, Bignoniaceae)
+   - Images: 20261011_144509.jpg, 20261011_144517.jpg, 20261011_144526.jpg
+   - Notes: Glossy bipinnate foliage with chartreuse-lime 'Golden' variant.
+
+6. Chinese Evergreen (Aglaonema commutatum & hybrids, Araceae)
+   - Images: 20261011_144537.jpg, 20261011_144639.jpg, 20261011_144709.jpg, 20261011_145441.jpg, 20261011_145925.jpg
+   - Notes: 'Silver Bay', 'Golden Madonna', 'White Rajah', and 'Red Valentine'.
+
+7. Wax Begonia (Begonia x semperflorens-cultorum, Begoniaceae)
+   - Images: 20261011_144906.jpg, 20261011_144921.jpg, 20261011_144941.jpg, 20261011_144950.jpg, 20261011_145001.jpg
+   - Notes: Continuous 4-petaled blooms in pink, white, and scarlet atop waxy succulent leaves.
+
+8. Goldcrest Lemon Cypress (Cupressus macrocarpa 'Goldcrest', Cupressaceae)
+   - Images: 20261011_145032.jpg, 20261011_145034.jpg, 20261011_145044.jpg
+   - Notes: Conical golden conifer with distinct lemon aroma.
+
+9. Showy Medinilla / Rose Grape (Medinilla magnifica, Melastomataceae)
+   - Images: 20261011_145152.jpg, 20261011_145206.jpg, 20261011_145227.jpg
+   - Notes: Dramatic cascading pendulous pink panicles with winged stems and ribbed leaves.
+
+10. Moth Orchid (Phalaenopsis hybrid, Orchidaceae)
+    - Images: 20261011_145324.jpg
+    - Notes: Arching spray of white blossoms with yellow dotted lip.
+
+11. Copperleaf / Jacob's Coat (Acalypha wilkesiana, Euphorbiaceae)
+    - Images: 20261011_145350.jpg, 20261011_145407.jpg
+    - Notes: Ruffled serrated foliage: 'Java White' (cream margin), 'Inferno', 'Tricolor' (pink margin).
+
+12. Golden Pothos / Money Plant (Epipremnum aureum, Araceae)
+    - Images: 20261011_145528.jpg
+    - Notes: Climbing coir totem poles with golden variegated heart-shaped leaves.
+
+13. Red Congo Philodendron (Philodendron erubescens 'Rojo Congo', Araceae)
+    - Images: 20261011_145537.jpg
+    - Notes: Self-heading upright habit with burgundy-red stems and emerging bronze-red leaves.
+
+14. Lemon Lime Philodendron / Neon Pothos (Philodendron hederaceum 'Lemon Lime' / Epipremnum 'Neon', Araceae)
+    - Images: 20261011_145549.jpg
+    - Notes: Fluorescent chartreuse-lime cordate foliage on coir poles.
+
+15. Swiss Cheese Plant (Monstera deliciosa, Araceae)
+    - Images: 20261011_145614.jpg
+    - Notes: Deeply perforated and split mature leaves (fenestrations).
+
+16. Giant Shield Philodendron (Philodendron giganteum / Homalomena, Araceae)
+    - Images: 20261011_145635.jpg
+    - Notes: Massive leathery cordate-sagittate leaves on thick upright stems.
+
+17. Peace Lily (Spathiphyllum wallisii, Araceae)
+    - Images: 20261011_145729.jpg, 20261011_145826.jpg
+    - Notes: Pure white hood-like spathes with cylindrical spadices and dark glossy foliage.
+
+18. Prayer Plants & Calatheas (Ctenanthe burle-marxii & Goeppertia ornata, Marantaceae)
+    - Images: 20261011_145853.jpg
+    - Notes: Nyctinastic foliage with fishbone and pink pinstripe patterns.
+
+19. ZZ Plant / Zanzibar Gem (Zamioculcas zamiifolia, Araceae)
+    - Images: 20261011_145917.jpg
+    - Notes: Fleshy succulent petioles with lustrous dark green leaflets.
+
+20. Garden Cosmos & Landscape (Cosmos bipinnatus, Asteraceae)
+    - Images: 20261011_150138.jpg
+    - Notes: Daisy-like pink and white blooms; landscape includes Ponytail Palm (Beaucarnea recurvata).
+
+21. Nursery Reference & Soil Boards (Botanical Signage)
+    - Images: 20261011_143826.jpg, 20261011_150032.jpg
+    - Notes: Botanical shrub section sign & organic potting substrate price listing.
+
+3. FUNCTIONALITY & INTERACTION DESIGN
+--------------------------------------------------------------------------------
+- Real-Time Live Search: Dynamically filters cards matching common name, botanical name, or family.
+- Photo Carousels: Entries with multiple field photos have slide navigation buttons, dot indicators, and a counter.
+- Image Error Handling: Gracefully falls back if any local image file is temporarily missing.
+- Responsive Design: Adapts cleanly from single-column mobile view to 3-column desktop grid.
+
+4. EXECUTION & DEPLOYMENT INSTRUCTIONS
+--------------------------------------------------------------------------------
+A. Running Locally:
+   Simply double-click or open `index.html` in any web browser:
+   $ open /Users/karn/Programming/plantCatalogue/index.html
+   Or serve with Python / Node:
+   $ python3 -m http.server 8000 (accessible at http://localhost:8000)
+
+B. Git & GitHub Setup (https://github.com/karnj22/plantCatalogue):
+   1. Initialize local git repository:
+      $ cd /Users/karn/Programming/plantCatalogue
+      $ git init
+   2. Link to remote GitHub repository:
+      $ git remote add origin https://github.com/karnj22/plantCatalogue.git
+   3. Stage and commit all files:
+      $ git add .
+      $ git commit -m "feat: complete plant catalogue with verified botanical identifications and index.html"
+   4. Push to GitHub:
+      $ git branch -M main
+      $ git push -u origin main
+================================================================================

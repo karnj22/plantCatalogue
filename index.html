@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>karn's plant catalogue</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-emerald-800 flex items-center gap-3">
+                        <span>🌿</span> karn's plant catalogue
+                    </h1>
+                    <p class="text-sm sm:text-base text-slate-500 mt-1.5 font-medium">pictures of ornamental plants by karn</p>
+                </div>
+                <!-- Live Search Bar -->
+                <div class="w-full md:w-80">
+                    <div class="relative">
+                        <svg class="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search plant or scientific name..." 
+                            class="w-full pl-10 pr-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all shadow-inner">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
+        <div id="plantGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dynamic Plant Cards injected via JavaScript -->
+        </div>
+
+        <!-- Empty search results state -->
+        <div id="noResults" class="hidden text-center py-20">
+            <p class="text-lg text-slate-500">No plants found matching your search query.</p>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-xs sm:text-sm text-slate-500">&copy; 2026 karn's plant catalogue &bull; Field Reference &amp; Botanical Archive</p>
+        </div>
+    </footer>
+
+    <script>
+        const plantSpecies = [
+            {
+                id: "poinsettia",
+                commonName: "Poinsettia",
+                scientificName: "Euphorbia pulcherrima",
+                category: "Euphorbiaceae (Spurge Family)",
+                characteristic: "Renowned for its colorful petal-like bracts (modified leaves) that surround clusters of tiny central flowers (cyathia). Features classic scarlet, salmon pink, and creamy white/yellow cultivars.",
+                photos: [
+                    {
+                        url: "images/20261011_142425.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Vibrant red and creamy ivory bracts in nursery display"
+                    },
+                    {
+                        url: "images/20261011_142431.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Greenhouse bench collection of scarlet, pink, and ivory cultivars"
+                    }
+                ]
+            },
+            {
+                id: "anthurium",
+                commonName: "Flamingo Flower / Anthurium",
+                scientificName: "Anthurium andraeanum",
+                category: "Araceae (Arum Family)",
+                characteristic: "Exotic tropical epiphyte featuring lustrous, waxy heart-shaped spathes (modified leaves) with an erect creamy spadix bearing tiny true flowers, set against leathery deep green foliage.",
+                photos: [
+                    {
+                        url: "images/20261011_143203.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Brilliant red cordate spathe with creamy yellow erect spadix"
+                    },
+                    {
+                        url: "images/20261011_143359.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "High-gloss lacquer red spathes on dark leathery foliage"
+                    }
+                ]
+            },
+            {
+                id: "siam-tulip",
+                commonName: "Siam Tulip / Hidden Lily",
+                scientificName: "Curcuma alismatifolia",
+                category: "Zingiberaceae (Ginger Family)",
+                characteristic: "Rhizomatous tropical ginger producing striking erect inflorescences with cup-shaped pink, rose-magenta, and coral-tinted bracts that resemble tulip flowers.",
+                photos: [
+                    {
+                        url: "images/20261011_144023.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Dense nursery bed with upright rose-pink terminal flower bracts"
+                    },
+                    {
+                        url: "images/20261011_144040.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Vibrant pink and coral/sunset bicolored bract display"
+                    }
+                ]
+            },
+            {
+                id: "croton",
+                commonName: "Garden Croton",
+                scientificName: "Codiaeum variegatum",
+                category: "Euphorbiaceae (Spurge Family)",
+                characteristic: "Celebrated for its intense, multicolored leathery foliage. Features broad-leaved veined forms ('Petra'), corkscrew-twisted ribbons ('Mammy'), and gold-speckled foliage ('Gold Dust').",
+                photos: [
+                    {
+                        url: "images/20261011_144445.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Broad-leaved 'Petra' variety with yellow, orange, and red venation"
+                    },
+                    {
+                        url: "images/20261011_144454.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Lush multi-cultivar croton bed showing diverse color patterns"
+                    },
+                    {
+                        url: "images/20261011_144502.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Narrow spiral 'Mammy' and speckled 'Gold Dust' cultivars"
+                    }
+                ]
+            },
+            {
+                id: "china-doll",
+                commonName: "China Doll / Serpent Tree",
+                scientificName: "Radermachera sinica",
+                category: "Bignoniaceae (Bignonia Family)",
+                characteristic: "Fast-growing evergreen shrub with delicate, glossy bipinnate foliage. Includes both standard deep emerald varieties and luminous chartreuse/lime ('Golden') selections.",
+                photos: [
+                    {
+                        url: "images/20261011_144509.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Finely divided bipinnate canopy with golden-lime new growth"
+                    },
+                    {
+                        url: "images/20261011_144517.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Golden / Chartreuse cultivar displaying radiant lime-yellow foliage"
+                    },
+                    {
+                        url: "images/20261011_144526.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Intricate pinnate leaf architecture and glossy emerald leaflets"
+                    }
+                ]
+            },
+            {
+                id: "aglaonema",
+                commonName: "Chinese Evergreen",
+                scientificName: "Aglaonema (commutatum & hybrids)",
+                category: "Araceae (Arum Family)",
+                characteristic: "Highly adaptable, resilient foliage plant prized for stunning leaf variegation. Cultivars range from broad silver centers ('Silver Bay'), ivory petioles ('Golden Madonna'), to striking pink/ruby markings ('Red Valentine').",
+                photos: [
+                    {
+                        url: "images/20261011_144537.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Mixed bench with 'Red Valentine' (pink/red) and variegated varieties"
+                    },
+                    {
+                        url: "images/20261011_144639.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "'Golden Madonna' / 'White Rajah' with ivory stems and marbled leaves"
+                    },
+                    {
+                        url: "images/20261011_144709.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Broad-leaved white-stemmed specimens in nursery grow bags"
+                    },
+                    {
+                        url: "images/20261011_145441.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "'Silver Bay' and 'White Rajah' displaying silvery-green leaf centers"
+                    },
+                    {
+                        url: "images/20261011_145925.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "'Red Valentine' & 'Snow White' showing vivid pink-speckled leaves"
+                    }
+                ]
+            },
+            {
+                id: "begonia",
+                commonName: "Wax Begonia / Clubed Begonia",
+                scientificName: "Begonia x semperflorens-cultorum",
+                category: "Begoniaceae (Begonia Family)",
+                characteristic: "Continuous-blooming compact perennial with glossy, waxy asymmetric succulent leaves and cheerful 4-petaled blossoms with yellow stamens in white, soft pink, and deep scarlet red.",
+                photos: [
+                    {
+                        url: "images/20261011_144906.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Pastel pink 4-petaled flowers with golden stamens and waxy foliage"
+                    },
+                    {
+                        url: "images/20261011_144921.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Pure white blooming cultivar with rounded fleshy green leaves"
+                    },
+                    {
+                        url: "images/20261011_144941.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Mass display nursery flats of white and delicate pink begonias"
+                    },
+                    {
+                        url: "images/20261011_144950.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Deep crimson red flowers paired with bronze-tinted waxy foliage"
+                    },
+                    {
+                        url: "images/20261011_145001.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Vivid scarlet red blooms with bright yellow centers close-up"
+                    }
+                ]
+            },
+            {
+                id: "lemon-cypress",
+                commonName: "Goldcrest Lemon Cypress",
+                scientificName: "Cupressus macrocarpa 'Goldcrest'",
+                category: "Cupressaceae (Cypress Family)",
+                characteristic: "Striking columnar/conical evergreen conifer with bright lime-to-golden feathery foliage. Emits a refreshing, crisp lemon-citrus fragrance when touched or brushed.",
+                photos: [
+                    {
+                        url: "images/20261011_145032.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Upright columnar specimen with vibrant lime-gold feathery sprays"
+                    },
+                    {
+                        url: "images/20261011_145034.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Cluster of potted lemon cypresses in the nursery section"
+                    },
+                    {
+                        url: "images/20261011_145044.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Side view showing tight pyramidal structure and golden tips"
+                    }
+                ]
+            },
+            {
+                id: "medinilla",
+                commonName: "Rose Grape / Showy Medinilla",
+                scientificName: "Medinilla magnifica",
+                category: "Melastomataceae (Melastome Family)",
+                characteristic: "Spectacular tropical epiphyte with large, leathery opposite leaves and 4-winged stems, producing dramatic cascading pendulous panicles of rosy-pink bracts and small berry-like flowers.",
+                photos: [
+                    {
+                        url: "images/20261011_145152.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Pendulous cascading pink flower panicle with bold-veined foliage"
+                    },
+                    {
+                        url: "images/20261011_145206.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Close-up of overlapping pink petaloid bracts and flower buds"
+                    },
+                    {
+                        url: "images/20261011_145227.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Multi-tiered greenhouse bench of mature blooming Medinilla shrubs"
+                    }
+                ]
+            },
+            {
+                id: "phalaenopsis",
+                commonName: "Moth Orchid",
+                scientificName: "Phalaenopsis hybrid",
+                category: "Orchidaceae (Orchid Family)",
+                characteristic: "Elegant epiphytic orchid bearing long arching sprays of pristine white flat blossoms with distinctive yellow-speckled lips, grown in transparent pots with breathable orchid bark.",
+                photos: [
+                    {
+                        url: "images/20261011_145324.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Graceful arching spray of pure white blooms in greenhouse display"
+                    }
+                ]
+            },
+            {
+                id: "acalypha",
+                commonName: "Copperleaf / Jacob's Coat",
+                scientificName: "Acalypha wilkesiana",
+                category: "Euphorbiaceae (Spurge Family)",
+                characteristic: "Vibrant tropical shrub with coppery, bronze, and multicolor serrated leaves. Varieties include white-margined 'Java White', deep coppery 'Inferno', and hot-pink edged 'Tricolor'.",
+                photos: [
+                    {
+                        url: "images/20261011_145350.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "'Java White' (cream margin) and 'Inferno' (copper) with flower spikes"
+                    },
+                    {
+                        url: "images/20261011_145407.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "'Tricolor' / 'Pink Picotee' with vivid hot-pink serrated margins"
+                    }
+                ]
+            },
+            {
+                id: "golden-pothos",
+                commonName: "Golden Pothos / Money Plant",
+                scientificName: "Epipremnum aureum",
+                category: "Araceae (Arum Family)",
+                characteristic: "Classic vigorous climbing vine with heart-shaped leathery leaves splashed with creamy golden variegation, trained upward on coir totem poles.",
+                photos: [
+                    {
+                        url: "images/20261011_145528.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Mature golden-variegated cordate foliage climbing coir moss poles"
+                    }
+                ]
+            },
+            {
+                id: "philodendron-rojo",
+                commonName: "Red Congo Philodendron",
+                scientificName: "Philodendron erubescens 'Rojo Congo'",
+                category: "Araceae (Arum Family)",
+                characteristic: "Self-heading upright tropical with robust glossy ovate leaves. New leaves emerge warm brownish-bronze and mature into deep lustrous dark green with deep burgundy-red petioles.",
+                photos: [
+                    {
+                        url: "images/20261011_145537.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Sturdy self-heading specimen with deep reddish-bronze petioles"
+                    }
+                ]
+            },
+            {
+                id: "lemon-lime-philodendron",
+                commonName: "Lemon Lime Philodendron / Neon Pothos",
+                scientificName: "Philodendron hederaceum 'Lemon Lime' / Epipremnum 'Neon'",
+                category: "Araceae (Arum Family)",
+                characteristic: "Eye-catching tropical climbing vine with electric chartreuse to fluorescent lime-green heart-shaped foliage supported on tall coir poles.",
+                photos: [
+                    {
+                        url: "images/20261011_145549.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Vibrant neon-lime foliage climbing columnar coir totem poles"
+                    }
+                ]
+            },
+            {
+                id: "monstera",
+                commonName: "Swiss Cheese Plant / Split-Leaf Monstera",
+                scientificName: "Monstera deliciosa",
+                category: "Araceae (Arum Family)",
+                characteristic: "Iconic tropical climbing epiphyte with massive, thick leathery leaves developing dramatic perforated holes and deep fenestrations along the leaf margins.",
+                photos: [
+                    {
+                        url: "images/20261011_145614.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Lush mature specimen showing deep leaf splits and fenestrations"
+                    }
+                ]
+            },
+            {
+                id: "giant-philodendron",
+                commonName: "Giant Shield Philodendron",
+                scientificName: "Philodendron giganteum / Homalomena",
+                category: "Araceae (Arum Family)",
+                characteristic: "Impressive tropical foliage specimen with massive glossy cordate-sagittate shield-shaped green leaves supported on sturdy erect petioles.",
+                photos: [
+                    {
+                        url: "images/20261011_145635.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Expansive glossy cordate green leaves on upright sturdy stems"
+                    }
+                ]
+            },
+            {
+                id: "peace-lily",
+                commonName: "Peace Lily",
+                scientificName: "Spathiphyllum wallisii",
+                category: "Araceae (Arum Family)",
+                characteristic: "Beloved flowering houseplant with dark glossy emerald lanceolate leaves and elegant pure white sail-like spathes enclosing creamy cylindrical spadices.",
+                photos: [
+                    {
+                        url: "images/20261011_145729.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Crisp white hooded spathes and dark emerald foliage in full bloom"
+                    },
+                    {
+                        url: "images/20261011_145826.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Expansive greenhouse bench of blooming mature peace lilies"
+                    }
+                ]
+            },
+            {
+                id: "marantaceae-collection",
+                commonName: "Prayer Plants & Calatheas",
+                scientificName: "Ctenanthe burle-marxii & Goeppertia ornata",
+                category: "Marantaceae (Arrowroot Family)",
+                characteristic: "Renowned for nyctinastic movement (leaves folding upward at night). Includes Fishbone Prayer Plant with silvery bands and Pinstripe Calathea with razor-thin pink stripes.",
+                photos: [
+                    {
+                        url: "images/20261011_145853.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Fishbone prayer plant and pinstripe calathea intricate foliage"
+                    }
+                ]
+            },
+            {
+                id: "zz-plant",
+                commonName: "ZZ Plant / Zanzibar Gem",
+                scientificName: "Zamioculcas zamiifolia",
+                category: "Araceae (Arum Family)",
+                characteristic: "Indestructible drought-tolerant tropical with thick succulent upright petioles bearing ultra-glossy, waxy deep-green pinnate leaflets that reflect light like polished jade.",
+                photos: [
+                    {
+                        url: "images/20261011_145917.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "High-gloss emerald leaflets along upright succulent stems"
+                    }
+                ]
+            },
+            {
+                id: "cosmos-landscape",
+                commonName: "Garden Cosmos & Landscape Garden",
+                scientificName: "Cosmos bipinnatus",
+                category: "Asteraceae (Daisy Family)",
+                characteristic: "Delicate airy annual with finely cut feathery foliage and daisy-like pink, magenta, and white blooms. Shown with Ponytail Palm (Beaucarnea recurvata) in the garden backdrop.",
+                photos: [
+                    {
+                        url: "images/20261011_150138.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Pink and white cosmos flower bed with outdoor nursery palm landscape"
+                    }
+                ]
+            },
+            {
+                id: "nursery-references",
+                commonName: "Nursery Signs & Potting Mix Board",
+                scientificName: "Botanical Reference Signage",
+                category: "Garden Centre Archive",
+                characteristic: "On-site signage documenting botanical sections (Eranthemum, Aralia, Acalypha, Pleomele) and potting amendments (Ready Pot Mix, Coco Peat, Vermicompost, Cow & Sheep Manure, Neem Cake).",
+                photos: [
+                    {
+                        url: "images/20261011_143826.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Section Signboard: Eranthemum / Aralia / Acalypha / Pleomele reflexa"
+                    },
+                    {
+                        url: "images/20261011_150032.jpg",
+                        date: "Oct 11, 2026",
+                        caption: "Price Board #5: Potting Soil, Coco Peat, Vermicompost & Manures"
+                    }
+                ]
+            }
+        ];
+
+        const currentIndices = {};
+        plantSpecies.forEach(plant => { currentIndices[plant.id] = 0; });
+
+        const plantGrid = document.getElementById('plantGrid');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+
+        function renderCatalog(filterText = '') {
+            plantGrid.innerHTML = '';
+
+            const filtered = plantSpecies.filter(plant => 
+                plant.commonName.toLowerCase().includes(filterText.toLowerCase()) ||
+                plant.scientificName.toLowerCase().includes(filterText.toLowerCase()) ||
+                plant.category.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            filtered.forEach(plant => {
+                const activeIdx = currentIndices[plant.id] || 0;
+                const currentPhoto = plant.photos[activeIdx];
+                const hasMultiple = plant.photos.length > 1;
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between';
+                
+                let carouselControlsHTML = '';
+                if (hasMultiple) {
+                    carouselControlsHTML = `
+                        <button onclick="changeSlide('${plant.id}', -1)" class="absolute left-2.5 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full backdrop-blur-xs transition-colors focus:outline-none">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button onclick="changeSlide('${plant.id}', 1)" class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full backdrop-blur-xs transition-colors focus:outline-none">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 bg-black/40 px-2.5 py-1 rounded-full backdrop-blur-xs">
+                            ${plant.photos.map((_, i) => `
+                                <span class="w-2 h-2 rounded-full transition-colors ${i === activeIdx ? 'bg-white' : 'bg-white/50'}"></span>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Image Carousel Container -->
+                        <div class="h-64 w-full overflow-hidden bg-slate-100 relative group">
+                            <img id="img-${plant.id}" src="${currentPhoto.url}" alt="${plant.commonName}" class="w-full h-full object-cover transition-transform duration-500" onerror="this.src='https://placehold.co/800x600/e2e8f0/64748b?text=Local+Image+Missing'">
+                            
+                            <!-- Category Badge -->
+                            <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-emerald-800 px-3 py-1 rounded-full shadow-xs">
+                                ${plant.category}
+                            </span>
+
+                            <!-- Photo Capture Date & Caption Tag -->
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-6 pb-3 px-4 text-white flex justify-between items-end">
+                                <div>
+                                    <p id="caption-${plant.id}" class="text-xs font-medium text-slate-200">${currentPhoto.caption}</p>
+                                    <p id="date-${plant.id}" class="text-[11px] text-emerald-300 font-medium mt-0.5 flex items-center gap-1">
+                                        📅 Taken: ${currentPhoto.date}
+                                    </p>
+                                </div>
+                                ${hasMultiple ? `<span class="text-[11px] bg-white/20 px-2 py-0.5 rounded-full font-mono">${activeIdx + 1}/${plant.photos.length}</span>` : ''}
+                            </div>
+
+                            ${carouselControlsHTML}
+                        </div>
+
+                        <!-- Card Details -->
+                        <div class="p-6">
+                            <h2 class="text-xl font-bold text-slate-900">${plant.commonName}</h2>
+                            <p class="text-xs font-medium text-emerald-700 italic mt-0.5">${plant.scientificName}</p>
+                            <p class="text-slate-600 text-sm mt-3 leading-relaxed">${plant.characteristic}</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0">
+                        <div class="w-full bg-slate-50 border border-slate-100 rounded-xl py-2 px-3 text-center text-xs text-slate-500 font-medium">
+                            📁 File: <code class="text-emerald-700 font-mono">${currentPhoto.url.split('/').pop()}</code>
+                        </div>
+                    </div>
+                `;
+                plantGrid.appendChild(card);
+            });
+        }
+
+        // Slide controller
+        window.changeSlide = function(plantId, direction) {
+            const plant = plantSpecies.find(p => p.id === plantId);
+            if (!plant) return;
+
+            let newIdx = currentIndices[plantId] + direction;
+            if (newIdx >= plant.photos.length) {
+                newIdx = 0;
+            } else if (newIdx < 0) {
+                newIdx = plant.photos.length - 1;
+            }
+
+            currentIndices[plantId] = newIdx;
+            renderCatalog(searchInput.value);
+        };
+
+        // Initial render
+        renderCatalog();
+
+        // Search listener
+        searchInput.addEventListener('input', (e) => {
+            renderCatalog(e.target.value);
+        });
+    </script>
+</body>
+</html>
