@@ -1,139 +1,825 @@
 ================================================================================
                     KARN'S PLANT CATALOGUE & BOTANICAL ARCHIVE
+       COMPREHENSIVE BOTANICAL IDENTIFICATION & HORTICULTURAL CULTIVATION GUIDE
 ================================================================================
 
-1. SYSTEM ARCHITECTURE & FILE STRUCTURE
+1. SYSTEM ARCHITECTURE & SEPARATION OF CONCERNS
 --------------------------------------------------------------------------------
-The project is a standalone, lightweight, zero-dependency client-side botanical 
-catalogue and field reference application.
+The project is built adhering strictly to the software engineering principle of 
+Separation of Concerns (SoC). Code is partitioned into dedicated, single-purpose 
+modules rather than bundled into a monolithic file:
 
 Directory Layout:
 plantCatalogue/
-├── index.html                   # Core web application (UI, styles, catalogue data, interactive JS)
-├── images/                      # Field photography archive (43 JPEG specimens)
+├── index.html                   # Semantic HTML5 markup (UI structure, skeleton)
+├── css/
+│   └── styles.css               # Dedicated presentation stylesheet (design system,
+│                                # variables, responsive grid, animations, modal)
+├── js/
+│   ├── data.js                  # Data model: 24 botanical species profiles with
+│   │                            # 10 horticultural fields & 43 photo mappings
+│   └── app.js                   # Application controller: reactive search filter,
+│                                # category chips, carousels, accordion drawers,
+│                                # fullscreen lightbox modal, and keyboard events
+├── Images/                      # Complete field photography archive (43 JPEG files)
 │   ├── 20261011_142425.jpg
+│   ├── 20261011_142431.jpg
 │   ├── ...
 │   └── 20261011_150138.jpg
-└── plant_catalogue_documentation.txt  # Companion architecture and specification documentation
+└── plant_catalogue_documentation.txt  # Comprehensive botanical & technical companion
 
-Key Technologies:
-- Markup: Semantic HTML5 structure.
-- Styling: Tailwind CSS via CDN with modern responsive card grids and glassmorphic badges.
-- Typography: Google Inter font family.
-- Logic: Vanilla JavaScript ES6+ (reactive search filter, multi-photo carousel controls).
-- Hosting: Fully compatible with GitHub Pages and local filesystem viewing.
+Architectural Advantages:
+- Maintainability: Plant records can be added, updated, or audited in `js/data.js`
+  without touching UI logic or HTML markup.
+- Design Flexibility: Styling modifications in `css/styles.css` take effect across
+  the entire application without risk of breaking DOM handlers.
+- Performance & Caching: Browsers cache external CSS and JS independently, reducing
+  re-download overhead on subsequent visits.
+- Scalability: Easy migration path to REST APIs or headless CMS in the future.
 
-2. BOTANICAL IDENTIFICATION ARCHIVE (43 IMAGES / 21 ENTRIES)
+
+2. COMPLETE AUDIT & CORRECTION OF ALL 43 NURSERY PHOTOGRAPHS
 --------------------------------------------------------------------------------
-1. Poinsettia (Euphorbia pulcherrima, Euphorbiaceae)
-   - Images: 20261011_142425.jpg, 20261011_142431.jpg
-   - Notes: Modified colored bracts in scarlet, pink, and ivory surrounding central cyathia.
+Prior catalogue versions suffered from sequential misalignments and misidentifications.
+Every photograph has been visually inspected, identified, and verified:
 
-2. Flamingo Flower / Anthurium (Anthurium andraeanum, Araceae)
-   - Images: 20261011_143203.jpg, 20261011_143359.jpg
-   - Notes: Glossy lacquer-red heart-shaped spathes with erect creamy-yellow spadices.
+Specimen 01: Images/20261011_142425.jpg
+  -> Flamingo Flower / Anthurium (Anthurium andraeanum, Araceae)
+     [CORRECTION: Previously mislabeled under Poinsettia. Features heart-shaped
+      scarlet/white spathes with yellow spadices; Lucky Bamboo on upper rack.]
 
-3. Siam Tulip / Hidden Lily (Curcuma alismatifolia, Zingiberaceae)
-   - Images: 20261011_144023.jpg, 20261011_144040.jpg
-   - Notes: Clumping tropical ginger with vibrant rose-pink and coral-tinted flower bracts.
+Specimen 02: Images/20261011_142431.jpg
+  -> Poinsettia / Mexican Flame Leaf (Euphorbia pulcherrima, Euphorbiaceae)
+     [Distinctive greenhouse bench with bright crimson and pink terminal bracts.]
 
-4. Garden Croton (Codiaeum variegatum, Euphorbiaceae)
-   - Images: 20261011_144445.jpg, 20261011_144454.jpg, 20261011_144502.jpg
-   - Notes: Multicolored thick foliage; cultivars 'Petra' (veined), 'Mammy' (spiral), 'Gold Dust'.
+Specimen 03: Images/20261011_143203.jpg
+  -> Garden Croton 'Petra' (Codiaeum variegatum, Euphorbiaceae)
+     [CORRECTION: Previously mislabeled as Anthurium. Leathery leaves veined in red/yellow.]
 
-5. China Doll / Serpent Tree (Radermachera sinica, Bignoniaceae)
-   - Images: 20261011_144509.jpg, 20261011_144517.jpg, 20261011_144526.jpg
-   - Notes: Glossy bipinnate foliage with chartreuse-lime 'Golden' variant.
+Specimen 04: Images/20261011_143359.jpg
+  -> China Doll / Emerald Tree (Radermachera sinica 'Golden', Bignoniaceae)
+     [CORRECTION: Previously mislabeled as Anthurium. Glossy chartreuse bipinnate leaves.]
 
-6. Chinese Evergreen (Aglaonema commutatum & hybrids, Araceae)
-   - Images: 20261011_144537.jpg, 20261011_144639.jpg, 20261011_144709.jpg, 20261011_145441.jpg, 20261011_145925.jpg
-   - Notes: 'Silver Bay', 'Golden Madonna', 'White Rajah', and 'Red Valentine'.
+Specimen 05: Images/20261011_143826.jpg
+  -> Nursery Infrastructure Sign: "NCS - Bamboos & Other Hedges"
+     [Cultivation section signboard at nursery display.]
 
-7. Wax Begonia (Begonia x semperflorens-cultorum, Begoniaceae)
-   - Images: 20261011_144906.jpg, 20261011_144921.jpg, 20261011_144941.jpg, 20261011_144950.jpg, 20261011_145001.jpg
-   - Notes: Continuous 4-petaled blooms in pink, white, and scarlet atop waxy succulent leaves.
+Specimen 06: Images/20261011_144023.jpg
+  -> Dwarf Globe Thuja (Thuja occidentalis) & New Guinea Impatiens (Impatiens hawkeri)
+     [CORRECTION: Previously mislabeled as Siam Tulip. Golden arborvitae conifer globe.]
 
-8. Goldcrest Lemon Cypress (Cupressus macrocarpa 'Goldcrest', Cupressaceae)
-   - Images: 20261011_145032.jpg, 20261011_145034.jpg, 20261011_145044.jpg
-   - Notes: Conical golden conifer with distinct lemon aroma.
+Specimen 07: Images/20261011_144040.jpg
+  -> Dwarf Globe Thuja & New Guinea Impatiens (Angle 2)
+     [Close angle of Thuja occidentalis surrounded by flowering red/magenta impatiens.]
 
-9. Showy Medinilla / Rose Grape (Medinilla magnifica, Melastomataceae)
-   - Images: 20261011_145152.jpg, 20261011_145206.jpg, 20261011_145227.jpg
-   - Notes: Dramatic cascading pendulous pink panicles with winged stems and ribbed leaves.
+Specimen 08: Images/20261011_144445.jpg
+  -> Garden Croton 'Gold Finger' (Codiaeum variegatum, Euphorbiaceae)
+     [Narrow, finger-like leaves densely splashed with bright golden-yellow.]
 
-10. Moth Orchid (Phalaenopsis hybrid, Orchidaceae)
-    - Images: 20261011_145324.jpg
-    - Notes: Arching spray of white blossoms with yellow dotted lip.
+Specimen 09: Images/20261011_144454.jpg
+  -> Garden Croton 'Mammy' (Codiaeum variegatum, Euphorbiaceae)
+     [Spiraled, twisted corkscrew foliage blushing red, orange, and black-purple.]
 
-11. Copperleaf / Jacob's Coat (Acalypha wilkesiana, Euphorbiaceae)
-    - Images: 20261011_145350.jpg, 20261011_145407.jpg
-    - Notes: Ruffled serrated foliage: 'Java White' (cream margin), 'Inferno', 'Tricolor' (pink margin).
+Specimen 10: Images/20261011_144502.jpg
+  -> Broadleaf Croton 'Mrs. Iceton' / 'Norma' (Codiaeum variegatum)
+     [Large oval leaves variegated in apricot, peach, and deep olive-green.]
 
-12. Golden Pothos / Money Plant (Epipremnum aureum, Araceae)
-    - Images: 20261011_145528.jpg
-    - Notes: Climbing coir totem poles with golden variegated heart-shaped leaves.
+Specimen 11: Images/20261011_144509.jpg
+  -> Oakleaf Croton 'Excellent' / 'Petra' (Codiaeum variegatum)
+     [Notched lobed oak-style foliage with glowing yellow midribs.]
 
-13. Red Congo Philodendron (Philodendron erubescens 'Rojo Congo', Araceae)
-    - Images: 20261011_145537.jpg
-    - Notes: Self-heading upright habit with burgundy-red stems and emerging bronze-red leaves.
+Specimen 12: Images/20261011_144517.jpg
+  -> Mixed Nursery Croton Canopy (Codiaeum variegatum cultivars)
+     [Lush container crop under 50% green nursery shade netting.]
 
-14. Lemon Lime Philodendron / Neon Pothos (Philodendron hederaceum 'Lemon Lime' / Epipremnum 'Neon', Araceae)
-    - Images: 20261011_145549.jpg
-    - Notes: Fluorescent chartreuse-lime cordate foliage on coir poles.
+Specimen 13: Images/20261011_144526.jpg
+  -> Narrow-leaf Red Croton 'Red Banana' (Codiaeum variegatum)
+     [Slender spatulate leaves with brilliant pink-red central ribs.]
 
-15. Swiss Cheese Plant (Monstera deliciosa, Araceae)
-    - Images: 20261011_145614.jpg
-    - Notes: Deeply perforated and split mature leaves (fenestrations).
+Specimen 14: Images/20261011_144537.jpg
+  -> Croton Bush Grouping (Codiaeum variegatum cultivars)
+     [Dense potted nursery containers demonstrating multi-stem growth.]
 
-16. Giant Shield Philodendron (Philodendron giganteum / Homalomena, Araceae)
-    - Images: 20261011_145635.jpg
-    - Notes: Massive leathery cordate-sagittate leaves on thick upright stems.
+Specimen 15: Images/20261011_144639.jpg
+  -> Gold Dust Croton (Codiaeum variegatum 'Gold Dust', Euphorbiaceae)
+     [Glossy forest green leaves peppered with star-like yellow speckles.]
 
-17. Peace Lily (Spathiphyllum wallisii, Araceae)
-    - Images: 20261011_145729.jpg, 20261011_145826.jpg
-    - Notes: Pure white hood-like spathes with cylindrical spadices and dark glossy foliage.
+Specimen 16: Images/20261011_144709.jpg
+  -> Narrow-leaf Croton 'Picasso's Paintbrush' / 'Zanzibar' (Codiaeum variegatum)
+     [Fine ribbon-like, ultra-slender leaves in vibrant sunset colors.]
 
-18. Prayer Plants & Calatheas (Ctenanthe burle-marxii & Goeppertia ornata, Marantaceae)
-    - Images: 20261011_145853.jpg
-    - Notes: Nyctinastic foliage with fishbone and pink pinstripe patterns.
+Specimen 17: Images/20261011_144906.jpg
+  -> Pothos 'N'Joy' / Pearls & Jade (Epipremnum aureum 'N'Joy', Araceae)
+     [CORRECTION: Previously mislabeled under Wax Begonia. Creamy white & green vine.]
 
-19. ZZ Plant / Zanzibar Gem (Zamioculcas zamiifolia, Araceae)
-    - Images: 20261011_145917.jpg
-    - Notes: Fleshy succulent petioles with lustrous dark green leaflets.
+Specimen 18: Images/20261011_144921.jpg
+  -> Wax Begonia (Begonia x semperflorens-cultorum, Begoniaceae)
+     [Succulent waxy leaves with clusters of 4-petaled cherry-red and white blossoms.]
 
-20. Garden Cosmos & Landscape (Cosmos bipinnatus, Asteraceae)
-    - Images: 20261011_150138.jpg
-    - Notes: Daisy-like pink and white blooms; landscape includes Ponytail Palm (Beaucarnea recurvata).
+Specimen 19: Images/20261011_144941.jpg
+  -> Dwarf Mondo Grass & Ribbon Grass (Ophiopogon japonicus & Liriope muscari)
+     [CORRECTION: Previously mislabeled under Wax Begonia. Dense dark green grass tufts.]
 
-21. Nursery Reference & Soil Boards (Botanical Signage)
-    - Images: 20261011_143826.jpg, 20261011_150032.jpg
-    - Notes: Botanical shrub section sign & organic potting substrate price listing.
+Specimen 20: Images/20261011_144950.jpg
+  -> Variegated Spider Plant (Chlorophytum comosum 'Variegatum', Asparagaceae)
+     [CORRECTION: Previously mislabeled under Wax Begonia. Ribbon-like arching rosettes.]
 
-3. FUNCTIONALITY & INTERACTION DESIGN
+Specimen 21: Images/20261011_145001.jpg
+  -> Variegated Dwarf Umbrella Tree (Schefflera arboricola 'Variegata', Araliaceae)
+     [CORRECTION: Previously mislabeled under Wax Begonia. 7-9 leaflet umbrella whorls.]
+
+Specimen 22: Images/20261011_145032.jpg
+  -> Variegated Dwarf Umbrella Tree - Canopy View (Schefflera arboricola 'Variegata')
+     [CORRECTION: Previously mislabeled under Lemon Cypress. Golden-splashed leaflets.]
+
+Specimen 23: Images/20261011_145034.jpg
+  -> Variegated Dwarf Umbrella Tree - Bench Display (Schefflera arboricola 'Variegata')
+     [CORRECTION: Previously mislabeled under Lemon Cypress. Potted table grouping.]
+
+Specimen 24: Images/20261011_145044.jpg
+  -> Green Dwarf Umbrella Tree (Schefflera arboricola, Araliaceae)
+     [CORRECTION: Previously mislabeled under Lemon Cypress. Solid glossy green whorls.]
+
+Specimen 25: Images/20261011_145152.jpg
+  -> Golden Net Bush / Yellow Vein Eranthemum (Pseuderanthemum carruthersii var. reticulatum)
+     [CORRECTION: Previously mislabeled as Medinilla. Lime leaves with bright golden veins.]
+
+Specimen 26: Images/20261011_145206.jpg
+  -> Purple False Eranthemum & Golden Net Bush (Pseuderanthemum carruthersii vars)
+     [CORRECTION: Previously mislabeled as Medinilla. Metallic deep purple & gold pairing.]
+
+Specimen 27: Images/20261011_145227.jpg
+  -> Golden Ming Aralia / Parsley Aralia (Polyscias fruticosa 'Elegans', Araliaceae)
+     [CORRECTION: Previously mislabeled as Medinilla. Lacy, dissected chartreuse foliage.]
+
+Specimen 28: Images/20261011_145324.jpg
+  -> Copperleaf 'Inferno' / 'Tricolor' (Acalypha wilkesiana, Euphorbiaceae)
+     [CORRECTION: Previously mislabeled as Moth Orchid. Serrated fiery copper/red leaves.]
+
+Specimen 29: Images/20261011_145350.jpg
+  -> Copperleaf 'Java White' / Marginata (Acalypha wilkesiana 'Java White')
+     [Ruffled crinkled green foliage with wide creamy-white margins.]
+
+Specimen 30: Images/20261011_145407.jpg
+  -> Copperleaf Mixed Cultivars (Acalypha wilkesiana cvs)
+     [Comparative bed showing pink/red 'Tricolor' against white-edged 'Java White'.]
+
+Specimen 31: Images/20261011_145441.jpg
+  -> Chinese Evergreen 'Silver Queen' / 'Silver Bay' (Aglaonema commutatum, Araceae)
+     [Silvery-pewter feathering over dark forest green lanceolate leaves.]
+
+Specimen 32: Images/20261011_145528.jpg
+  -> Golden Pothos on Moss Pole (Epipremnum aureum, Araceae)
+     [Vining climber trained vertically on coir pole with golden-variegated cordate leaves.]
+
+Specimen 33: Images/20261011_145537.jpg
+  -> Red Philodendron / Rojo Congo (Philodendron 'Rojo Congo', Araceae)
+     [Self-heading upright plant with glossy burgundy-bronze leaves and red petioles.]
+
+Specimen 34: Images/20261011_145549.jpg
+  -> Golden Goddess / Lemon Lime Philodendron (Philodendron 'Golden Goddess', Araceae)
+     [Fluorescent neon-chartreuse foliage climbing coir moss pole.]
+
+Specimen 35: Images/20261011_145614.jpg
+  -> Swiss Cheese Plant / Monstera (Monstera deliciosa, Araceae)
+     [Massive leathery leaves with dramatic fenestrations (slits and perforations).]
+
+Specimen 36: Images/20261011_145635.jpg
+  -> Giant Philodendron / Imperial Green (Philodendron giganteum / 'Imperial Green')
+     [Massive, broad, upright cordate-sagittate blades with sunken veins.]
+
+Specimen 37: Images/20261011_145729.jpg
+  -> Peace Lily / White Sails (Spathiphyllum wallisii, Araceae)
+     [Dark glossy foliage adorned with elegant pure white hood-like spathes.]
+
+Specimen 38: Images/20261011_145826.jpg
+  -> Peace Lily Nursery Crop (Spathiphyllum wallisii, Araceae)
+     [Wide nursery bench showing vigorous clumping container specimens in bloom.]
+
+Specimen 39: Images/20261011_145853.jpg
+  -> Fishbone Prayer Plant & Calathea (Ctenanthe burle-marxii / Goeppertia, Marantaceae)
+     [Herringbone dark green bands on silver blades with purple undersides; nyctinastic.]
+
+Specimen 40: Images/20261011_145917.jpg
+  -> ZZ Plant / Zanzibar Gem (Zamioculcas zamiifolia, Araceae)
+     [Mirror-gloss pinnate leaflets on succulent petioles rising from potato-like rhizomes.]
+
+Specimen 41: Images/20261011_145925.jpg
+  -> Colorful Aglaonema Hybrids: 'Siam Aurora', 'Lady Valentine', 'White Anyamanee'
+     [Flat of Chinese Evergreens in candy-pink, ruby-red, and speckled ivory patterns.]
+
+Specimen 42: Images/20261011_150032.jpg
+  -> Nursery Substrates, Potting Soils & Fertilizers Price Board
+     [Reference signboard listing Coco Peat, Vermi Compost, Manure, and Neem Cake.]
+
+Specimen 43: Images/20261011_150138.jpg
+  -> Garden Cosmos Meadow & Landscape (Cosmos bipinnatus & Beaucarnea recurvata)
+     [Sunny flowering border of pink/white Cosmos with central Ponytail Palm & canopy trees.]
+
+
+3. COMPREHENSIVE BOTANICAL PROFILES & HORTICULTURAL CARE DIRECTORY
 --------------------------------------------------------------------------------
-- Real-Time Live Search: Dynamically filters cards matching common name, botanical name, or family.
-- Photo Carousels: Entries with multiple field photos have slide navigation buttons, dot indicators, and a counter.
-- Image Error Handling: Gracefully falls back if any local image file is temporarily missing.
-- Responsive Design: Adapts cleanly from single-column mobile view to 3-column desktop grid.
+Each profile includes all required growing parameters:
+- Colour of Foliage
+- Flower Characteristics
+- Watering Cycle
+- Optimal Sun Exposure
+- Suitable Weather & Environment (Indoor vs Outdoor)
+- Nutritional Requirements
+- Soil Requirements
+- Wind Conditions
+- Cultivation, Propagation & Care Tips
 
-4. EXECUTION & DEPLOYMENT INSTRUCTIONS
+================================================================================
+PROFILE 01: FLAMINGO FLOWER / TAIL FLOWER (Anthurium andraeanum)
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_142425.jpg
+- Colour of Foliage: Glossy deep emerald green, leathery heart-shaped (cordate) leaves
+  with pale prominent venation.
+- Flower Characteristics: Waxy scarlet-red, blush-pink, or pure white cordate spathes
+  featuring an upright cream-to-yellow flower spadix; individual blooms last 6-8 weeks.
+- Watering Cycle: Moderate: Water when top 1-2 inches of potting mix feel dry; prefers
+  consistent slight moisture; requires 60%+ relative humidity; never let roots sit in water.
+- Optimal Sun Exposure: Medium to bright indirect filtered sunlight; avoid harsh direct
+  sun which causes spathe bleaching and foliar sunburn.
+- Suitable Weather & Environment: Indoor & Sheltered Patio; warm tropical/subtropical
+  (18°C - 30°C / 65°F - 86°F); highly sensitive to chilling below 15°C (59°F).
+- Nutritional Requirements: High-phosphorus liquid fertilizer (NPK 10-20-10) diluted to
+  1/4 strength every 4-6 weeks during active growth; top-dress with organic vermicompost.
+- Soil Requirements: Coarse, ultra-aerated, free-draining aroid mix (pH 5.5 - 6.5):
+  40% coco chips/coir, 30% perlite, 20% orchid bark, and 10% vermicompost.
+- Wind Conditions: Sheltered: Intolerant of strong air currents, cold drafts, and AC vents.
+- Growth Habit & Tips: Epiphytic perennial clumping habit. Wipe leaves with a damp cloth
+  to maximize photosynthesis. Contains calcium oxalate; keep away from pets.
+
+================================================================================
+PROFILE 02: POINSETTIA / MEXICAN FLAME LEAF (Euphorbia pulcherrima)
+================================================================================
+- Family: Euphorbiaceae (Spurge Family)
+- Associated Image: Images/20261011_142431.jpg
+- Colour of Foliage: Dark forest green lobed leaves beneath flamboyant terminal whorls
+  of modified bracts in crimson-red, salmon-pink, or creamy-ivory.
+- Flower Characteristics: Small, button-like yellow cyathia clustered in the center;
+  the showy 'petals' are actually brightly colored botanical bracts.
+- Watering Cycle: Thoroughly soak when the top inch of soil is dry to touch; drain pot
+  completely; waterlogged soil leads quickly to pythium root rot.
+- Optimal Sun Exposure: Bright indirect light indoors; 6-8 hours of gentle filtered light
+  daily; avoid scorching direct sunlight through glass.
+- Suitable Weather & Environment: Indoor & Filtered Courtyard; 16°C - 24°C (60°F - 75°F);
+  drops foliage if subjected to sudden temperature drops below 12°C.
+- Nutritional Requirements: Balanced liquid feed (NPK 20-20-20) at half strength every
+  3-4 weeks in spring/summer; suspend feeding during peak winter bract display.
+- Soil Requirements: Porous, fast-draining potting soil (pH 5.8 - 6.5): 50% coco peat,
+  30% sterilized soil/sand, 20% perlite.
+- Wind Conditions: Sheltered: Susceptible to leaf and bract abscission if placed in
+  drafty doorways or exposed to exterior wind gusts.
+- Growth Habit & Tips: To induce winter blooming, provide 14 hours of continuous total
+  darkness every night for 8-10 weeks starting in early autumn. Milky latex sap may irritate skin.
+
+================================================================================
+PROFILE 03: GARDEN CROTON (Codiaeum variegatum cultivars)
+================================================================================
+- Family: Euphorbiaceae (Spurge Family)
+- Associated Images: Images/20261011_143203.jpg, 144445.jpg, 144454.jpg, 144502.jpg,
+  144509.jpg, 144517.jpg, 144526.jpg, 144537.jpg, 144639.jpg, 144709.jpg
+- Colour of Foliage: Vibrant multi-chromatic tapestry of fiery scarlet, golden-yellow,
+  orange, magenta, peach, bronze, and dark emerald; varies by cultivar:
+  * 'Petra': Broad oval leaves with luminous red, orange, and yellow veins.
+  * 'Mammy': Corkscrew-spiraled leaves blushing from chartreuse to deep crimson.
+  * 'Gold Dust': Forest green elliptical leaves freckled with golden stars.
+  * 'Gold Finger': Narrow finger-like blades splashed with gold.
+  * 'Picasso's Paintbrush': Thread-like ribbons of red, yellow, and green.
+- Flower Characteristics: Slender racemes of tiny star-like cream blossoms; insignificant
+  compared to the flamboyant foliage.
+- Watering Cycle: Moderate to high: Maintain evenly moist soil during hot weather; water
+  when top 1/2 inch is dry; do not allow complete root desiccation.
+- Optimal Sun Exposure: Bright direct to intense indirect sunlight; needs 4-6 hours of
+  sunlight daily to synthesize and maintain rich anthocyanin foliage pigmentation.
+- Suitable Weather & Environment: Indoor Sunny Windows & Outdoor Tropical Patios;
+  20°C - 32°C (68°F - 90°F); sheds leaves rapidly below 15°C (60°F).
+- Nutritional Requirements: High-potassium liquid or slow-release fertilizer (NPK 14-14-14)
+  monthly in spring and summer; top-dress with cow manure or vermicompost.
+- Soil Requirements: Rich, loamy, organically enriched potting substrate (pH 6.0 - 6.5):
+  40% garden soil, 30% coco peat, 20% vermicompost, 10% perlite.
+- Wind Conditions: Moderate tolerance once established; avoid cold, dry gusty winds.
+- Growth Habit & Tips: Bushy woody shrub. Wipe leaves to prevent spider mites in dry air.
+
+================================================================================
+PROFILE 04: CHINA DOLL / EMERALD TREE (Radermachera sinica 'Golden')
+================================================================================
+- Family: Bignoniaceae (Trumpet Vine Family)
+- Associated Image: Images/20261011_143359.jpg
+- Colour of Foliage: Delicate, bipinnate, feathery leaves with an ultra-glossy sheen,
+  glowing in lime-green and bright chartreuse-gold.
+- Flower Characteristics: Fragrant, trumpet-shaped yellow/white blossoms in large panicles
+  (rare on indoor specimens; typical on mature outdoor trees).
+- Watering Cycle: Moderate: Keep uniformly moist without soaking; water when top inch
+  feels dry; resents drought and waterlogging equally.
+- Optimal Sun Exposure: Bright indirect sunlight; thrives near east-facing windows; gentle
+  morning sun deepens the golden foliage hue.
+- Suitable Weather & Environment: Indoor Bright Rooms & Shaded Verandas; 18°C - 26°C;
+  protect from frost and dry heating drafts.
+- Nutritional Requirements: Balanced houseplant fertilizer (NPK 10-10-10) at half strength
+  monthly from March through September.
+- Soil Requirements: Fertile, spongy, well-aerated mix (pH 6.0 - 7.0): 50% coco peat,
+  30% leaf compost, 20% perlite.
+- Wind Conditions: Sheltered: Highly sensitive to drafts; sudden changes in location or
+  drafty airflow induce leaf drop.
+- Growth Habit & Tips: Fast-growing. Prune growing tips frequently to encourage bushy branching.
+
+================================================================================
+PROFILE 05: DWARF GLOBE THUJA & NEW GUINEA IMPATIENS (Thuja occidentalis & Impatiens)
+================================================================================
+- Family: Cupressaceae / Balsaminaceae
+- Associated Images: Images/20261011_144023.jpg, 144040.jpg
+- Colour of Foliage: Scale-like aromatic conifer foliage in golden-emerald paired with
+  bronze-green fleshy succulent impatiens leaves.
+- Flower Characteristics: Impatiens produce vibrant 5-petaled flowers in brilliant scarlet,
+  coral, magenta, and white with spurred nectaries; continuous summer-to-autumn bloom.
+- Watering Cycle: Thuja is moderately drought-tolerant; Impatiens need consistent, generous
+  moisture and must be watered every 1-2 days during warm weather.
+- Optimal Sun Exposure: Thuja thrives in full to partial sun; Impatiens prefer morning sun
+  with dappled afternoon shade.
+- Suitable Weather & Environment: Outdoor Gardens, Landscape Borders & Large Planters;
+  Thuja is cold hardy; Impatiens thrive in 18°C - 28°C and are frost tender.
+- Nutritional Requirements: Balanced slow-release pellets (NPK 10-10-10) in spring for Thuja;
+  high-potassium liquid feed every 2 weeks for prolific impatiens flowering.
+- Soil Requirements: Rich, moist, organically amended soil (pH 6.0 - 7.0): 40% garden soil,
+  30% organic compost/cow manure, 30% coco peat/sand.
+- Wind Conditions: Thuja has high wind tolerance; tender succulent impatiens stems need
+  protection from buffeting gales.
+- Growth Habit & Tips: Classic companion planting combining architectural evergreen
+  symmetry with continuous floriferous color.
+
+================================================================================
+PROFILE 06: POTHOS 'N'JOY' / PEARLS & JADE (Epipremnum aureum 'N'Joy')
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_144906.jpg
+- Colour of Foliage: Compact ovate-cordate leaves with crisp glacier-white blotches
+  sharply contrasted with deep emerald green centers.
+- Flower Characteristics: Extremely rare in cultivation; grown for variegated foliage.
+- Watering Cycle: Low to moderate: Allow the top 50% of the soil to dry between waterings;
+  tolerant of slight underwatering.
+- Optimal Sun Exposure: Medium to bright indirect light; requires ample indirect light to
+  sustain crisp white variegation without burning.
+- Suitable Weather & Environment: Indoor & Sheltered Balcony; 18°C - 28°C (65°F - 82°F);
+  keep above 12°C in winter.
+- Nutritional Requirements: Balanced liquid feed diluted to 1/4 strength every 4-6 weeks
+  in spring/summer.
+- Soil Requirements: Porous, breathable mix (pH 6.1 - 6.8): 40% coco peat, 30% perlite,
+  20% orchid bark, 10% vermicompost.
+- Wind Conditions: Sheltered indoor air; avoid harsh AC currents.
+- Growth Habit & Tips: Slow-growing compact vine; perfect for hanging pots or small desks.
+
+================================================================================
+PROFILE 07: WAX BEGONIA / CLUBBED BEGONIA (Begonia x semperflorens-cultorum)
+================================================================================
+- Family: Begoniaceae (Begonia Family)
+- Associated Image: Images/20261011_144921.jpg
+- Colour of Foliage: Glossy, rounded, succulent leaves in bright emerald-green with
+  subtle bronze-crimson margins.
+- Flower Characteristics: Continuous sprays of 4-petaled blossoms in cherry-red, blush-pink,
+  and pure white centered with bright yellow stamens.
+- Watering Cycle: Moderate: Water when the top 1/2 inch of soil dries; avoid wetting foliage
+  directly to prevent fungal leaf spot.
+- Optimal Sun Exposure: Bright indirect light to dappled shade; tolerates gentle morning sun;
+  harsh midday sun scorches succulent leaves.
+- Suitable Weather & Environment: Indoor Bright Sills & Outdoor Shady Beds; 18°C - 26°C;
+  tender perennial grown as an annual in frost zones.
+- Nutritional Requirements: Water-soluble bloom booster (NPK 10-15-10) at half strength
+  every 2-3 weeks while flowering.
+- Soil Requirements: Light, humus-rich mix (pH 5.5 - 6.5): 40% coco peat, 30% perlite,
+  30% aged organic compost.
+- Wind Conditions: Sheltered: Juicy, brittle stems snap easily in strong gusts.
+- Growth Habit & Tips: Pinch off spent flower clusters to stimulate continuous flowering.
+
+================================================================================
+PROFILE 08: DWARF MONDO GRASS & RIBBON GRASS (Ophiopogon japonicus & Liriope)
+================================================================================
+- Family: Asparagaceae (Asparagus Family)
+- Associated Image: Images/20261011_144941.jpg
+- Colour of Foliage: Dense fountain-like tufts of fine dark obsidian-green blades alongside
+  variegated white-striped ribbon grass.
+- Flower Characteristics: Small bell-shaped pale lilac/white flowers nestled low among the
+  blades in summer, followed by brilliant metallic-blue berries.
+- Watering Cycle: Low to moderate: Drought-tolerant once established; water weekly during
+  dry spells.
+- Optimal Sun Exposure: Partial to full shade; tolerates morning sun in temperate areas.
+- Suitable Weather & Environment: Outdoor Groundcover, Edging & Shaded Courtyards; hardy
+  from -5°C to 38°C; thrives in humid tropical gardens.
+- Nutritional Requirements: Low feeder: Top-dress with vermicompost or cow manure once in
+  early spring.
+- Soil Requirements: Adaptable, preferring moist, well-draining organic loam (pH 5.5 - 7.0).
+- Wind Conditions: High tolerance: Fibrous, flexible blades withstand heavy winds and foot traffic.
+- Growth Habit & Tips: Superb zero-mow turf replacement and rock garden border.
+
+================================================================================
+PROFILE 09: VARIEGATED SPIDER PLANT (Chlorophytum comosum 'Variegatum')
+================================================================================
+- Family: Asparagaceae (Asparagus Family)
+- Associated Image: Images/20261011_144950.jpg
+- Colour of Foliage: Arching linear ribbons with a creamy-white or ivory central stripe
+  flanked by vibrant emerald borders.
+- Flower Characteristics: Small white star-like flowers on long, wiry, arching stolons,
+  which develop miniature plantlets (spiderettes).
+- Watering Cycle: Moderate: Allow top 50% of soil to dry; fleshy tuberous roots store water;
+  avoid waterlogging.
+- Optimal Sun Exposure: Medium to bright indirect light; direct hot sun bleaches foliage.
+- Suitable Weather & Environment: Indoor & Shaded Veranda; 15°C - 30°C (59°F - 86°F);
+  keep above 7°C.
+- Nutritional Requirements: Balanced liquid feed (NPK 10-10-10) diluted to half strength
+  monthly in spring/summer.
+- Soil Requirements: Well-draining potting soil (pH 6.0 - 7.0): 50% coco peat, 30% perlite,
+  20% vermicompost.
+- Wind Conditions: Sheltered to moderate: Flexible arching leaves handle moderate air movement.
+- Growth Habit & Tips: NASA clean air plant. Propagate by rooting spiderettes in water or soil.
+
+================================================================================
+PROFILE 10: DWARF UMBRELLA TREE (Schefflera arboricola 'Variegata' & Green)
+================================================================================
+- Family: Araliaceae (Ginseng Family)
+- Associated Images: Images/20261011_145001.jpg, 145032.jpg, 145034.jpg, 145044.jpg
+- Colour of Foliage: Palmately compound umbrella whorls (7-9 leaflets) in solid glossy
+  emerald or splashed with butter-yellow and cream.
+- Flower Characteristics: Small greenish-yellow flowers in terminal umbels outdoors,
+  followed by round orange-to-black berries.
+- Watering Cycle: Moderate: Allow top 1/3 of soil to dry between waterings; avoid soggy
+  roots; tolerates occasional neglect.
+- Optimal Sun Exposure: Bright indirect to medium filtered light; variegated forms need
+  more light to keep golden patterns; tolerates morning sun.
+- Suitable Weather & Environment: Indoor Bright Rooms & Shaded Gardens; 16°C - 30°C;
+  protect from freezing.
+- Nutritional Requirements: Balanced houseplant fertilizer (NPK 20-20-20) at half strength
+  every 4-6 weeks in spring/summer; top-dress with vermicompost.
+- Soil Requirements: Fast-draining rich medium (pH 6.0 - 6.5): 40% coco peat, 30% perlite,
+  20% organic compost, 10% neem cake.
+- Wind Conditions: Moderate tolerance: Sturdy woody stems withstand moderate patio breezes.
+- Growth Habit & Tips: Can be pruned to compact shrub, grown as standard tree, or trained
+  into dramatic bonsai.
+
+================================================================================
+PROFILE 11: GOLDEN NET BUSH & PURPLE ERANTHEMUM (Pseuderanthemum carruthersii)
+================================================================================
+- Family: Acanthaceae (Acanthus Family)
+- Associated Images: Images/20261011_145152.jpg, 145206.jpg
+- Colour of Foliage: var. reticulatum has bright lime leaves with a luminous golden-yellow
+  network of veins; var. atropurpureum features metallic deep eggplant-purple and bronze leaves.
+- Flower Characteristics: Small salverform white tubular flowers with magenta spots in the
+  throat, borne on erect spikes.
+- Watering Cycle: Regular: Keep soil evenly moist during hot months; water when top inch
+  dries; avoid waterlogged roots.
+- Optimal Sun Exposure: Morning sun to bright dappled shade; requires ample light to sustain
+  rich purple and golden venation.
+- Suitable Weather & Environment: Outdoor Semi-Shade & Bright Patio; warm tropical (20°C - 35°C);
+  drops foliage below 15°C.
+- Nutritional Requirements: Organic vermicompost every 2 months; monthly diluted balanced feed.
+- Soil Requirements: Humus-rich, loamy, well-draining soil (pH 6.0 - 7.0): 40% garden soil,
+  30% vermicompost, 20% cocopeat, 10% sand.
+- Wind Conditions: Sheltered to moderate: Broad leaves may fray in intense winds; best in
+  sheltered courtyards or under shade cloth.
+- Growth Habit & Tips: Highly prized for tropical contrast hedges. Prune regularly to maintain
+  compact density.
+
+================================================================================
+PROFILE 12: GOLDEN MING ARALIA / PARSLEY ARALIA (Polyscias fruticosa 'Elegans')
+================================================================================
+- Family: Araliaceae (Ginseng Family)
+- Associated Image: Images/20261011_145227.jpg
+- Colour of Foliage: Finely divided tripinnate, feathery, lacy parsley-like foliage in
+  chartreuse and rich green on sculpted woody stems.
+- Flower Characteristics: Inconspicuous tiny greenish umbels (rarely seen; cultivated for
+  foliage and bonsai trunk structure).
+- Watering Cycle: Moderate: Allow top 2 inches of soil to dry before watering; sensitive
+  to overwatering; requires 50-70% humidity.
+- Optimal Sun Exposure: Bright indirect to medium filtered light; morning sun is beneficial.
+- Suitable Weather & Environment: Indoor Living Rooms & Shaded Patios; 18°C - 29°C (65°F - 85°F);
+  drops foliage if cold drafted below 15°C.
+- Nutritional Requirements: Light feeder: Half-strength balanced liquid fertilizer every
+  4-6 weeks during spring/summer.
+- Soil Requirements: Airy, lightweight mix (pH 6.0 - 6.5): 40% coco peat, 30% perlite,
+  20% compost, 10% coarse sand.
+- Wind Conditions: Sheltered: Intolerant of dry or drafty winds; keep away from heating/AC ducts.
+- Growth Habit & Tips: Naturally assumes an ancient, bonsai-like gnarled trunk form.
+
+================================================================================
+PROFILE 13: COPPERLEAF / JACOB'S COAT (Acalypha wilkesiana cultivars)
+================================================================================
+- Family: Euphorbiaceae (Spurge Family)
+- Associated Images: Images/20261011_145324.jpg, 145350.jpg, 145407.jpg
+- Colour of Foliage: Ruffled, coarsely toothed heart-shaped leaves in fiery copper, pink,
+  bronze, and chocolate; 'Java White' features striking creamy-white crinkled margins.
+- Flower Characteristics: Slender drooping catkin-like spikes of reddish flowers hidden
+  beneath large colorful leaves.
+- Watering Cycle: Regular: Water consistently when the top inch of soil is dry; mulch to
+  preserve soil moisture in heat.
+- Optimal Sun Exposure: Full sun to partial shade; 5-6 hours of direct sun maximizes vivid
+  red and pink coloration.
+- Suitable Weather & Environment: Outdoor Sun & Semi-Shaded Tropical Gardens; 20°C - 35°C;
+  frost-tender shrub.
+- Nutritional Requirements: Heavy feeder: Slow-release pellets (NPK 14-14-14) or vermicompost
+  every 6-8 weeks during active growth.
+- Soil Requirements: Rich, fertile, organically amended loam (pH 6.1 - 7.0): 40% garden loam,
+  30% cow manure/compost, 20% cocopeat, 10% sand.
+- Wind Conditions: Moderate tolerance: Thrives in tropical breezes; shelter from harsh
+  coastal gales to prevent leaf tearing.
+- Growth Habit & Tips: Prune tips periodically to maintain a dense hedge.
+
+================================================================================
+PROFILE 14: CHINESE EVERGREEN (Aglaonema commutatum 'Silver Queen' / 'Silver Bay')
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145441.jpg
+- Colour of Foliage: Lanceolate leaves painted with broad silvery-pewter feathering over
+  deep dark forest green margins.
+- Flower Characteristics: Small pale green spathe-and-spadix flowers; sometimes followed
+  by decorative red berries (toxic if eaten).
+- Watering Cycle: Low to moderate: Allow top 50% of potting medium to dry before watering;
+  forgiving of irregular watering.
+- Optimal Sun Exposure: Low to bright indirect light; thrives under office fluorescent
+  lighting; avoid direct scorching sun.
+- Suitable Weather & Environment: Indoor Low-Light to Bright Indirect; 18°C - 28°C;
+  sensitive to cold drafts below 15°C.
+- Nutritional Requirements: Low feeder: Dilute balanced houseplant fertilizer to 1/4 strength
+  every 6-8 weeks in spring/summer.
+- Soil Requirements: Peat-based, porous mix (pH 5.6 - 6.5): 50% coco peat, 30% perlite,
+  20% vermicompost.
+- Wind Conditions: Sheltered: Keep away from cold exterior drafts and AC blowers.
+- Growth Habit & Tips: Top NASA air-purifying plant with legendary resilience.
+
+================================================================================
+PROFILE 15: GOLDEN POTHOS / MONEY PLANT (Epipremnum aureum on Moss Pole)
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145528.jpg
+- Colour of Foliage: Heart-shaped glossy green leaves splashed with golden-yellow and
+  cream marbling; leaves enlarge significantly as they climb.
+- Flower Characteristics: Extremely rare in indoor cultivation; grown for vigorous climbing foliage.
+- Watering Cycle: Moderate: Water when top 1-2 inches of soil are dry; keep the coir totem
+  moist to encourage aerial root attachment.
+- Optimal Sun Exposure: Low to bright indirect light; brighter filtered light enhances
+  golden variegation.
+- Suitable Weather & Environment: Indoor & Shaded Veranda; 18°C - 30°C (65°F - 86°F);
+  protect from cold below 10°C.
+- Nutritional Requirements: Balanced liquid fertilizer (NPK 20-20-20) at half strength
+  monthly in spring/autumn.
+- Soil Requirements: Fast-draining standard aroid mix (pH 6.1 - 6.8): 40% coco peat,
+  30% garden soil, 20% vermicompost, 10% perlite.
+- Wind Conditions: Sheltered to moderate: Aerial roots firmly anchor plant to totem.
+- Growth Habit & Tips: Climbing vertically stimulates dramatic mature leaf growth up to 12 inches.
+
+================================================================================
+PROFILE 16: RED PHILODENDRON / ROJO CONGO (Philodendron 'Rojo Congo')
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145537.jpg
+- Colour of Foliage: Large paddle-shaped leaves emerging in lustrous burgundy-red and
+  maturing to deep dark forest green with wine-red petioles.
+- Flower Characteristics: Infrequent indoors; produces a reddish-purple spathe surrounding
+  a central spadix.
+- Watering Cycle: Moderate: Water when top 2 inches of soil are dry; avoid overwatering
+  or letting saucer hold standing water.
+- Optimal Sun Exposure: Bright indirect light; tolerates medium filtered light; direct
+  hot sun fades burgundy coloration.
+- Suitable Weather & Environment: Indoor Bright & Covered Patio; 18°C - 28°C; protect
+  from cold drafts under 13°C.
+- Nutritional Requirements: Balanced liquid feed (NPK 20-20-20) at half strength monthly
+  in spring/summer; apply neem cake annually.
+- Soil Requirements: Chunky aroid mix (pH 5.8 - 6.5): 40% coco chips/peat, 30% orchid bark,
+  20% perlite, 10% vermicompost.
+- Wind Conditions: Sheltered: Sturdy self-heading habit; protect broad leaves from desiccating wind.
+- Growth Habit & Tips: Upright, non-vining self-heading specimen; wipe large leaves clean.
+
+================================================================================
+PROFILE 17: GOLDEN GODDESS / LEMON LIME PHILODENDRON (Philodendron 'Golden Goddess')
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145549.jpg
+- Colour of Foliage: Fluorescent electric-yellow and chartreuse-lime heart-shaped leaves.
+- Flower Characteristics: Rare indoors; grown for vibrant luminous foliage.
+- Watering Cycle: Moderate: Allow top 1-2 inches of soil to dry between waterings;
+  requires 55%+ humidity.
+- Optimal Sun Exposure: Bright indirect light; bright light is critical to sustain neon-yellow
+  pigments; direct sun may scorch.
+- Suitable Weather & Environment: Indoor Bright & Shaded Terrace; 18°C - 29°C; protect
+  from cold below 14°C.
+- Nutritional Requirements: Balanced liquid fertilizer (NPK 10-10-10) at half strength monthly.
+- Soil Requirements: Breathable chunky mix (pH 6.0 - 6.8): 40% coco peat, 30% perlite,
+  20% orchid bark, 10% compost.
+- Wind Conditions: Sheltered: Needs stable indoor air; avoid cold exterior drafts.
+- Growth Habit & Tips: Vining climber; looks magnificent on a coir moss totem or hanging basket.
+
+================================================================================
+PROFILE 18: SWISS CHEESE PLANT / MONSTERA (Monstera deliciosa)
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145614.jpg
+- Colour of Foliage: Massive, glossy, leathery deep jade-green heart-shaped leaves with
+  deep lateral splits and holes (fenestrations).
+- Flower Characteristics: Large white boat-shaped spathe enclosing a spadix, developing
+  into edible composite fruit outdoors in the tropics.
+- Watering Cycle: Moderate: Water thoroughly when top 2-3 inches of medium are dry;
+  allow excess to drain; prefers 60%+ humidity.
+- Optimal Sun Exposure: Bright indirect or filtered sunlight; tolerates gentle morning sun;
+  harsh afternoon sun burns leaf blades.
+- Suitable Weather & Environment: Indoor Bright & Shaded Veranda; 18°C - 30°C (65°F - 86°F);
+  frost sensitive below 12°C.
+- Nutritional Requirements: High-nitrogen balanced liquid feed (NPK 20-20-20) monthly in
+  spring/summer; top-dress with vermicompost.
+- Soil Requirements: Chunky, well-draining aroid mix (pH 5.5 - 7.0): 40% coco chips/peat,
+  25% perlite, 20% orchid bark, 15% composted manure.
+- Wind Conditions: Sheltered: Huge leaves can tear in strong wind; best in sheltered corners.
+- Growth Habit & Tips: Train aerial roots onto a moss pole or guide them into the soil.
+
+================================================================================
+PROFILE 19: GIANT PHILODENDRON / IMPERIAL GREEN (Philodendron giganteum)
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145635.jpg
+- Colour of Foliage: Massive, broad, upright cordate-sagittate leaves with sunken ribbed veins
+  and glossy emerald sheen.
+- Flower Characteristics: Inconspicuous maroon-to-green spathe and spadix in mature specimens.
+- Watering Cycle: Moderate: Water when top 2 inches of soil feel dry; avoid prolonged saturation.
+- Optimal Sun Exposure: Medium to bright indirect light; dappled outdoor shade; avoid direct sun.
+- Suitable Weather & Environment: Indoor Atriums & Shaded Landscape Understory; 20°C - 32°C;
+  protect from cold below 14°C.
+- Nutritional Requirements: Balanced houseplant fertilizer monthly in summer; top-dress with
+  vermicompost and ready pot mix.
+- Soil Requirements: Loose, fibrous, rich aroid medium (pH 6.0 - 6.5): 40% coco peat,
+  30% vermicompost, 20% perlite, 10% charcoal.
+- Wind Conditions: Sheltered: Giant leaves act like sails in wind; protect from gusts to
+  prevent petiole breakage.
+- Growth Habit & Tips: Imposing architectural specimen for spacious rooms and lobbies.
+
+================================================================================
+PROFILE 20: PEACE LILY / WHITE SAILS (Spathiphyllum wallisii)
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Images: Images/20261011_145729.jpg, 145826.jpg
+- Colour of Foliage: Dense clumping lanceolate leaves in dark emerald green with ribbed texture.
+- Flower Characteristics: Pristine white, hood-shaped spathes curving gracefully around an
+  erect creamy spadix; blooms persistently for 6-10 weeks.
+- Watering Cycle: High moisture: Keep soil evenly moist; foliage droops dramatically when
+  thirsty and rebounds rapidly; avoid stagnant water.
+- Optimal Sun Exposure: Low to medium indirect light; one of the few flowering plants that
+  blooms in lower light; direct sun scorches leaves brown.
+- Suitable Weather & Environment: Indoor Low-Light & Shaded Patio; 18°C - 27°C (65°F - 80°F);
+  sensitive to cold drafts below 12°C.
+- Nutritional Requirements: Low feeder: Dilute liquid fertilizer (NPK 10-10-10 at 1/4 strength)
+  every 6-8 weeks; excessive fertilizer causes leaf tip burn.
+- Soil Requirements: Moisture-retentive yet well-draining soil (pH 5.8 - 6.5): 50% coco peat,
+  30% perlite, 20% vermicompost.
+- Wind Conditions: Sheltered: Intolerant of dry AC or heating drafts; needs stable humidity.
+- Growth Habit & Tips: Premier NASA air-cleansing plant. Use filtered or rested tap water
+  if leaves show brown tips from municipal fluoride/chlorine.
+
+================================================================================
+PROFILE 21: FISHBONE PRAYER PLANT & CALATHEA (Ctenanthe burle-marxii & Goeppertia)
+================================================================================
+- Family: Marantaceae (Arrowroot Family)
+- Associated Image: Images/20261011_145853.jpg
+- Colour of Foliage: Silver-green leaf blades marked with dark green herringbone bands and
+  deep magenta-purple undersides; folds leaves upward at night (nyctinastic motion).
+- Flower Characteristics: Small white or pale violet flowers on compact spikes; grown
+  primarily for patterned foliage.
+- Watering Cycle: Consistent moisture: Water when top 1/2 inch is slightly dry; requires
+  60%+ humidity; sensitive to hard tap water minerals.
+- Optimal Sun Exposure: Medium to bright indirect filtered light; direct sun fades patterns
+  and curls leaf edges.
+- Suitable Weather & Environment: Indoor Humid Spaces & Filtered Terraces; 18°C - 27°C;
+  protect from cold below 16°C.
+- Nutritional Requirements: Light feeder: Balanced feed (NPK 10-10-10) at 1/4 strength monthly
+  in spring/summer.
+- Soil Requirements: Moisture-retentive, porous, slightly acidic mix (pH 5.5 - 6.5):
+  50% coco peat, 30% perlite, 20% vermicompost.
+- Wind Conditions: Sheltered: Intolerant of dry drafts; air movement causes crispy edges.
+- Growth Habit & Tips: Raises leaves upright at night like praying hands. Mist daily.
+
+================================================================================
+PROFILE 22: ZZ PLANT / ZANZIBAR GEM (Zamioculcas zamiifolia)
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145917.jpg
+- Colour of Foliage: High-gloss, mirror-finish, waxy dark forest-green pinnate leaflets
+  along thick succulent stems.
+- Flower Characteristics: Small bronze-brown spadix-and-spathe near the base; rarely seen
+  and secondary to foliage.
+- Watering Cycle: Very low: Allow soil to dry 100% completely between waterings; swollen
+  underground potato-like rhizomes store moisture for months; avoid overwatering.
+- Optimal Sun Exposure: Tolerates any light level from low dim corners to bright indirect light;
+  avoid scorching desert afternoon sun.
+- Suitable Weather & Environment: Indoor Any Room & Covered Patio; 16°C - 32°C (60°F - 90°F);
+  protect from freezing below 8°C.
+- Nutritional Requirements: Extremely low feeder: 1/4 strength liquid fertilizer twice a year
+  (spring and mid-summer).
+- Soil Requirements: Free-draining succulent mix (pH 6.0 - 7.0): 40% perlite/pumice,
+  30% coarse sand, 30% coco peat/potting soil.
+- Wind Conditions: High tolerance: Thick succulent stems withstand room air currents and drafts.
+- Growth Habit & Tips: Virtually indestructible houseplant. Ideal for beginners and offices.
+
+================================================================================
+PROFILE 23: COLORFUL AGLAONEMA HYBRIDS ('Siam Aurora', 'Lady Valentine')
+================================================================================
+- Family: Araceae (Arum Family)
+- Associated Image: Images/20261011_145925.jpg
+- Colour of Foliage: Spectacular mosaic of candy-pink, ruby-red midribs, lime-green borders,
+  and speckled white ('White Anyamanee') on lanceolate leaves.
+- Flower Characteristics: Miniature greenish-white spathe-and-spadix flowers (pinch off
+  to conserve foliage energy).
+- Watering Cycle: Low to moderate: Water when top 50% of soil feels dry; sensitive to
+  overwatering; withstands moderate dry spells.
+- Optimal Sun Exposure: Medium to bright indirect light; pink and red cultivars require
+  brighter indirect light than green varieties to maintain vivid coloration.
+- Suitable Weather & Environment: Indoor Bright Rooms & Shaded Patios; 18°C - 28°C;
+  protect from cold below 15°C.
+- Nutritional Requirements: Quarter-strength liquid foliage fertilizer every 4-6 weeks
+  in spring/summer.
+- Soil Requirements: Airy, fast-draining potting mixture (pH 5.8 - 6.5): 50% coco peat,
+  30% perlite, 20% vermicompost.
+- Wind Conditions: Sheltered: Shield from cold drafts and AC blower vents.
+- Growth Habit & Tips: Stunning splash of color indoors with minimal maintenance.
+
+================================================================================
+PROFILE 24: HORTICULTURAL SUBSTRATES & ORGANIC AMENDMENTS (Nursery Soil Guide)
+================================================================================
+- Field Reference Images: Images/20261011_150032.jpg, 143826.jpg
+- Substrates Documented on Nursery Reference Boards:
+  1. Sterilized Coco Peat (25 Kg / 5 Kg): Pathogen-free coconut coir providing superior
+     water retention (up to 8x weight) and root aeration.
+  2. Ready Pot Mix: Pre-blended soil formulated with porous mineral aggregates and organic matter.
+  3. Vermi Compost Organic Manure: Earthworm castings rich in bio-available NPK, humic acids,
+     and beneficial microbial flora.
+  4. Cow & Sheep Manure: Composted farmyard manure providing slow-release macronutrients.
+  5. Neem Cake (Organic Fertilizer & Nematocide): Cold-pressed neem seed residue that
+     repels soil-borne pests (root grubs, termites, nematodes) while inhibiting nitrification.
+- Recommended Universal Potting Recipe for Tropical Indoor/Balcony Plants:
+  * 40% Sterilized Coco Peat
+  * 25% Ready Pot Mix / Loamy Soil
+  * 20% Vermi Compost
+  * 10% Perlite or Pumice
+  * 5% Neem Cake Powder
+
+================================================================================
+PROFILE 25: GARDEN COSMOS & CANOPY LANDSCAPE (Cosmos bipinnatus & Beaucarnea)
+================================================================================
+- Family: Asteraceae / Asparagaceae
+- Associated Image: Images/20261011_150138.jpg
+- Colour of Foliage: Delicate, feathery, thread-like lacy foliage on Cosmos; pendulous
+  strap-like fountain leaves on Ponytail Palm (Beaucarnea recurvata).
+- Flower Characteristics: Daisy-like blossoms with radiating petals in shades of pink,
+  magenta, and pure white around a golden disc; continuous summer/autumn bloom.
+- Watering Cycle: Low to moderate: Highly drought-tolerant once established; water deeply
+  1-2 times weekly in dry weather.
+- Optimal Sun Exposure: Full direct sun (6+ hours of sunshine daily); shade results in
+  weak, leggy stems with few blossoms.
+- Suitable Weather & Environment: Outdoor Full Sun Garden Beds & Landscape Borders;
+  18°C - 35°C (65°F - 95°F).
+- Nutritional Requirements: Low to moderate: Avoid excess nitrogen which promotes leaf
+  growth at the expense of blossoms; top-dress with light compost.
+- Soil Requirements: Well-draining, poor to moderately fertile garden soil (pH 6.0 - 7.5).
+- Wind Conditions: Moderate to sheltered: Tall feathery stems benefit from shelter from
+  buffeting gale winds.
+- Growth Habit & Tips: Attracts butterflies and pollinating bees. Ponytail Palm in center
+  stores water in its bulbous base.
+
+
+4. USER INTERACTION DESIGN & CONTROLS
+--------------------------------------------------------------------------------
+- Live Reactive Search: As the user types into the search box, the catalog instantly
+  filters across common names, scientific binomials, families, categories, foliage colors,
+  sunlight requirements, and soil mixes.
+- Category Filter Chips: Quick toggles for All Specimens, Indoor/Patio, Outdoor/Landscape,
+  Flowering Varieties, and Colorful Foliage.
+- Multi-Photo Carousels: Entries with multiple field photos feature interactive prev/next
+  arrow controls and live photo counters (e.g., "1 / 10 photos").
+- Expandable Cultivation Accordion: Each card features a "Full Growing & Soil Guide" button
+  that cleanly toggles the extended parameters (Climate, Soil Mix, Nutrition, Wind, Pro Tips).
+- Fullscreen Lightbox Modal: Clicking any photo enlarges it into a fullscreen darkened
+  lightbox with image details and caption.
+- Keyboard Navigation:
+  * Press 'Escape' to close the photo lightbox modal.
+  * Tab navigation support for all interactive buttons.
+
+
+5. EXECUTION, TESTING & GITHUB REPOSITORY DEPLOYMENT
 --------------------------------------------------------------------------------
 A. Running Locally:
-   Simply double-click or open `index.html` in any web browser:
+   Open `index.html` directly in Google Chrome, Safari, or Firefox:
    $ open /Users/karn/Programming/plantCatalogue/index.html
-   Or serve with Python / Node:
-   $ python3 -m http.server 8000 (accessible at http://localhost:8000)
+   Or host locally with Python:
+   $ cd /Users/karn/Programming/plantCatalogue
+   $ python3 -m http.server 8000
+   Then browse to http://localhost:8000
 
-B. Git & GitHub Setup (https://github.com/karnj22/plantCatalogue):
-   1. Initialize local git repository:
-      $ cd /Users/karn/Programming/plantCatalogue
-      $ git init
-   2. Link to remote GitHub repository:
-      $ git remote add origin https://github.com/karnj22/plantCatalogue.git
-   3. Stage and commit all files:
-      $ git add .
-      $ git commit -m "feat: complete plant catalogue with verified botanical identifications and index.html"
-   4. Push to GitHub:
-      $ git branch -M main
-      $ git push -u origin main
+B. Git & GitHub Deployment:
+   Repository: https://github.com/karnj22/plantCatalogue
+   1. Check git status:
+      $ git status
+   2. Stage all modifications (CSS, JS data, JS app, index.html, documentation):
+      $ git add index.html css/styles.css js/data.js js/app.js plant_catalogue_documentation.txt
+   3. Commit with semantic message:
+      $ git commit -m "feat: separation of concerns with modular css, js data, verified botanical ids & full cultivation guides"
+   4. Push to remote repository:
+      $ git push origin main
 ================================================================================
